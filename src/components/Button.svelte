@@ -1,3 +1,9 @@
+<script>
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
+</script>
+
 <style>
   .btn {
     font-family: inherit;
@@ -27,4 +33,4 @@
   }
 </style>
 
-<button class="btn">What2Game</button>
+<button class="btn" on:click={() => dispatch('click')}>What2Game</button>

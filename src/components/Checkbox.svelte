@@ -5,11 +5,11 @@
 
   let checked;
 
+  const dispatch = createEventDispatcher();
+
   $: if (checked) {
     dispatch("checked", id);
   }
-
-  const dispatch = createEventDispatcher();
 </script>
 
 <style>

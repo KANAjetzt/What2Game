@@ -15,9 +15,6 @@
       `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=2F15898C280E0CD2F2D007CEB140476E&steamids=${steamIds}`
     );
     const friendDataa = (await friendData.json()).response.players;
-    console.log("-----------------");
-    console.log(friendDataa);
-    console.log("-----------------");
 
     return { friendDataa };
   }
@@ -25,6 +22,8 @@
 
 <script>
   import { appStore } from "../stores";
+  import asyncForEach from "../utils/asyncForEach";
+  import { fetchGames } from "../components/FetchGames.svelte";
   import Checkbox from "../components/Checkbox.svelte";
   import Button from "../components/Button.svelte";
 
@@ -39,6 +38,36 @@
       ...$appStore.selectedFriends,
       $appStore.friends[friendIndex]
     ];
+  };
+
+  const handleWhat2Game = async e => {
+    asyncForEach($appStore.selectedFriends, async friend => {
+      console.log(friend);
+
+      const friendSteamId = friend.steamid;
+      const data = { friendSteamId };
+
+      // associated script = /src/routes/process/games.js
+      const url = "/process/games";
+
+      fetch(url, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(r => {
+          r.json().then(function(result) {
+            // The data is posted: do something with the result...
+            console.log(result);
+          });
+        })
+        .catch(err => {
+          // POST error: do something...
+          console.log("POST error", err.message);
+        });
+    });
   };
 </script>
 
@@ -75,7 +104,7 @@
     </div>
   {/each}
 
-  <Button />
+  <Button on:click={handleWhat2Game} />
 {:else}
   <p>no Friends :(</p>
 {/if}
