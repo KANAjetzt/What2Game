@@ -1,0 +1,8 @@
+Get all my games:
+http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=2F15898C280E0CD2F2D007CEB140476E&steamid=76561198029394113&format=json
+
+Get Friendlist:
+http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=2F15898C280E0CD2F2D007CEB140476E&steamid=76561198029394113&relationship=friend
+
+Profile Info:
+http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=2F15898C280E0CD2F2D007CEB140476E&steamids=76561198029394113

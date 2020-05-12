@@ -1,0 +1,30 @@
+<style>
+  .btn {
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+    padding: 25px 80px;
+    display: inline-block;
+    margin: 15px 30px;
+    color: #333;
+    background: #eee;
+    border: 4px solid #eee;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    outline: none;
+    position: relative;
+    transition: all 0.3s;
+  }
+
+  .btn:hover {
+    background: transparent;
+    color: #eee;
+  }
+
+  .btn:active {
+    top: 2px;
+  }
+</style>
+
+<button class="btn">What2Game</button>
