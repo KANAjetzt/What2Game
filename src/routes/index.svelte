@@ -5,7 +5,7 @@
 
   export async function preload(page, session) {
     const res = await this.fetch(
-      "http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=2F15898C280E0CD2F2D007CEB140476E&steamid=76561198029394113&relationship=friend"
+      "http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=2F15898C280E0CD2F2D007CEB140476E&steamid=76561198178351833&relationship=friend"
     );
     const friends = (await res.json()).friendslist.friends;
 
@@ -23,6 +23,7 @@
 <script>
   import { appStore } from "../stores";
   import asyncForEach from "../utils/asyncForEach";
+  import findSimilar from "../utils/findSimilar";
   import { fetchGames } from "../components/FetchGames.svelte";
   import Checkbox from "../components/Checkbox.svelte";
   import Button from "../components/Button.svelte";
@@ -30,6 +31,75 @@
   export let friendDataa;
 
   $appStore.friends = friendDataa;
+
+  const getSameGames = selectedFriendsArr => {
+    const allGames = selectedFriendsArr.map(friend => {
+      console.log(friend);
+      const games = friend.games;
+
+      const gameAppIds = games.map(game => game.appid);
+
+      return gameAppIds;
+    });
+
+    return findSimilar(allGames);
+  };
+
+  const getGameInfo = async sameGames => {
+    try {
+      await asyncForEach(sameGames, async appId => {
+        const data = { appId };
+
+        // associated script = /src/routes/process/gameInfo.js
+        const url = "/process/gameInfo";
+
+        // request steam store game info of this game
+        const res = await fetch(url, {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+
+        const gameInfo = (await res.json()).data.gameInfo[appId].data;
+
+        console.log(gameInfo);
+
+        // save game Info in appStore
+        if (gameInfo) $appStore.sameGames = [...$appStore.sameGames, gameInfo];
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getGamesOfFriends = async () => {
+    await asyncForEach($appStore.selectedFriends, async (friend, index) => {
+      const friendSteamId = friend.steamid;
+      const data = { friendSteamId };
+
+      // associated script = /src/routes/process/games.js
+      const url = "/process/games";
+
+      // request all games of this friend
+      const res = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      const games = (await res.json()).data.games.response.games;
+
+      // slam this games in to the sellectedFriend Object in the selectedFriends array
+      $appStore.selectedFriends[index] = {
+        ...$appStore.selectedFriends[index],
+        games
+      };
+    });
+  };
 
   const handleSelectedFriend = e => {
     const friendIndex = e.detail;
@@ -41,33 +111,17 @@
   };
 
   const handleWhat2Game = async e => {
-    asyncForEach($appStore.selectedFriends, async friend => {
-      console.log(friend);
+    await getGamesOfFriends();
 
-      const friendSteamId = friend.steamid;
-      const data = { friendSteamId };
+    console.log($appStore);
 
-      // associated script = /src/routes/process/games.js
-      const url = "/process/games";
+    const sameGames = getSameGames($appStore.selectedFriends);
 
-      fetch(url, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-        .then(r => {
-          r.json().then(function(result) {
-            // The data is posted: do something with the result...
-            console.log(result);
-          });
-        })
-        .catch(err => {
-          // POST error: do something...
-          console.log("POST error", err.message);
-        });
-    });
+    console.log(sameGames);
+
+    await getGameInfo(sameGames);
+
+    console.log($appStore);
   };
 </script>
 
@@ -92,7 +146,7 @@
   <title>Sapper project template</title>
 </svelte:head>
 
-{#if friendDataa}
+{#if friendDataa && !$appStore.sameGames[0]}
   {#each friendDataa as friend, index}
     <div class="friend">
       <Checkbox id={index} on:checked={handleSelectedFriend} />
@@ -105,6 +159,24 @@
   {/each}
 
   <Button on:click={handleWhat2Game} />
-{:else}
+{:else if !friendDataa && !$appStore.sameGames[0]}
   <p>no Friends :(</p>
+{/if}
+
+{#if $appStore.sameGames}
+  {#each $appStore.sameGames as game}
+    <div class="game">
+      <h2>{game.name}</h2>
+      <img
+        class="gameImg"
+        src={game.header_image}
+        alt={`Header image of ${game.name}`} />
+      <ul class="categorieList">
+        {#each game.categories as categorie}
+          <li class="categorie">{categorie.description}</li>
+        {/each}
+      </ul>
+
+    </div>
+  {/each}
 {/if}

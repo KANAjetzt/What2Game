@@ -5,7 +5,6 @@ export async function post(req, res, next) {
   res.setHeader("Content-Type", "application/json");
   /* Retrieves the data */
   const steamId = req.body.friendSteamId;
-  console.log(steamId);
   // Do something with the data...
 
   const gameReq = await axios(
