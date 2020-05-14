@@ -13,68 +13,80 @@
 </script>
 
 <style>
-  /* Quelle: https://codepen.io/bbodine1/pen/novBm */
-
   .checkbox {
-    width: 20px;
     position: relative;
   }
+  .input {
+    opacity: 0;
+  }
 
-  :global(.checkbox label) {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
+  /* --- Unchecked  --- */
+
+  .span {
     position: absolute;
     top: 0;
     left: 0;
-    background: -webkit-gradient(
-      linear,
-      left top,
-      left bottom,
-      from(#222222),
-      to(#45484d)
-    );
-    background: linear-gradient(to bottom, #222222 0%, #45484d 100%);
-    border-radius: 4px;
-    box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5),
-      0px 1px 0px rgba(255, 255, 255, 0.4);
+    height: 24px;
+    width: 24px;
+    background-color: #eee;
+    border: 2px solid #eee;
+    transition: all 0.3s;
   }
 
-  :global(.checkbox label:after) {
-    content: "";
-    width: 9px;
-    height: 5px;
+  .span::after {
     position: absolute;
-    top: 4px;
-    left: 4px;
-    border: 3px solid #fcfff4;
-    border-top: none;
-    border-right: none;
-    background: transparent;
-    opacity: 0;
-    -webkit-transform: rotate(-45deg);
-    transform: rotate(-45deg);
-  }
-
-  :global(.checkbox label:hover::after) {
-    opacity: 0.3;
-  }
-
-  :global(.checkbox input[type="checkbox"]) {
-    visibility: hidden;
-  }
-
-  :global(.checkbox input[type="checkbox"]:checked + label:after) {
+    content: "";
+    left: 12px;
+    top: 12px;
+    height: 0px;
+    width: 0px;
+    border-width: 0 3px 3px 0;
+    transform: rotate(0deg) scale(0);
     opacity: 1;
+  }
+
+  .span:hover {
+    background-color: transparent;
+  }
+
+  /* --- Checked --- */
+
+  .input:checked ~ .span {
+    background-color: transparent;
+    transform: rotate(0deg) scale(1);
+  }
+
+  .input:checked ~ .span::after {
+    transform: rotate(45deg) scale(1);
+    opacity: 1;
+    left: 8px;
+    top: 1px;
+    width: 6px;
+    height: 17px;
+    border: solid #eee;
+    border-width: 0 2px 2px 0;
+    background-color: transparent;
+  }
+
+  .label .span {
+    transition: all 0.1s ease-out;
+  }
+
+  .label .span:after {
+    transition: all 0.1s ease-out;
   }
 </style>
 
 <div class="checkbox">
-  <input
-    type="checkbox"
-    id={`checkbox-${id}`}
-    accept=""
-    name="check"
-    bind:checked />
-  <label for={`checkbox-${id}`} />
+
+  <label class="label" for={`checkbox-${id}`}>
+    <input
+      type="checkbox"
+      class="input"
+      id={`checkbox-${id}`}
+      accept=""
+      name="check"
+      bind:checked />
+    <span class="span" />
+  </label>
 </div>
