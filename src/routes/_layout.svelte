@@ -1,7 +1,5 @@
 <script>
-  import Nav from "../components/Nav.svelte";
-
-  export let segment;
+  import NeonText from "../components/NeonText.svelte";
 </script>
 
 <style>
@@ -21,7 +19,7 @@
   }
 </style>
 
-<Nav {segment} />
+<NeonText />
 
 <main>
   <slot />
