@@ -19,7 +19,8 @@
   }
 </style>
 
-<NeonText />
+<!-- Neon Text 4 later maybe :) -->
+<!-- <NeonText /> -->
 
 <main>
   <slot />
