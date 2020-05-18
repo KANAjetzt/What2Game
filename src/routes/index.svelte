@@ -21,6 +21,8 @@
 </script>
 
 <script>
+  import { fly } from "svelte/transition";
+
   import { appStore } from "../stores";
   import asyncForEach from "../utils/asyncForEach";
   import findSimilar from "../utils/findSimilar";
@@ -129,6 +131,8 @@
   .friend {
     display: flex;
     align-items: center;
+    padding: 1rem;
+    box-shadow: 1px 4px 10px 0px rgba(0, 0, 0, 0.05);
   }
 
   .avatar {
@@ -148,12 +152,15 @@
 
 {#if friendDataa && !$appStore.sameGames[0]}
   {#each friendDataa as friend, index}
-    <div class="friend">
+    <div class="friend" transition:fly={{ duration: 200, x: -200 }}>
       <Checkbox id={index} on:checked={handleSelectedFriend} />
       <img
         class="avatar"
         src={friend.avatarfull}
-        alt={`Avatar image of ${friend.personaname}`} />
+        alt={`Avatar image of ${friend.personaname}`}
+        loading="lazy"
+        width="70"
+        height="70" />
       <p class="name">{friend.personaname}</p>
     </div>
   {/each}
@@ -164,8 +171,8 @@
 {/if}
 
 {#if $appStore.sameGames}
-  {#each $appStore.sameGames as game}
-    <div class="game">
+  {#each $appStore.sameGames as game (game.steam_appid)}
+    <div class="game" transition:fly={{ duration: 1000, x: -200 }}>
       <h2>{game.name}</h2>
       <img
         class="gameImg"

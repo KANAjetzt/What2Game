@@ -9,6 +9,7 @@
   }
 
   main {
+    display: grid;
     position: relative;
     max-width: 56em;
     background-color: #333;
