@@ -1,5 +1,6 @@
 <script>
   import NeonText from "../components/NeonText.svelte";
+  import Nav from "../components/Nav.svelte";
 </script>
 
 <style>
@@ -22,7 +23,7 @@
 
 <!-- Neon Text 4 later maybe :) -->
 <!-- <NeonText /> -->
-
+<Nav />
 <main>
   <slot />
 </main>
