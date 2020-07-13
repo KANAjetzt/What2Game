@@ -74,7 +74,7 @@ express() // You can also use Express
     passport.authenticate("steam", { failureRedirect: "/" }),
     function (req, res) {
       console.log("-------------------------");
-      console.log(res);
+      console.log(res.req.user.id);
       console.log("-------------------------");
       res.redirect("/");
     }
