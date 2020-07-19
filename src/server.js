@@ -69,16 +69,56 @@ express() // You can also use Express
   .use(passport.initialize())
   .use(passport.session())
   .get("/auth/login", passport.authenticate("steam", { failureRedirect: "/" }))
+
+  // .get("/auth/steam/return", (req, res) => {
+  //   passport.authenticate("steam", { failureRedirect: "/" });
+  //   console.log("-------------------------");
+  //   console.log(res.req.user.id);
+  //   console.log("-------------------------");
+  //   const steamId = res.req.user.id;
+
+  //   /* Returns steamID */
+  //   res.status(200).json({
+  //     success: true,
+  //     data: {
+  //       steamId,
+  //     },
+  //   });
+  // })
+
   .get(
     "/auth/steam/return",
     passport.authenticate("steam", { failureRedirect: "/" }),
-    function (req, res) {
+    (req, res) => {
       console.log("-------------------------");
       console.log(res.req.user.id);
       console.log("-------------------------");
-      res.redirect("/");
+      const steamId = res.req.user.id;
+
+      /* Returns steamID */
+      res.status(200).json({
+        success: true,
+        data: {
+          steamId,
+        },
+      });
     }
   )
+
+  // .get(
+  //   "/auth/steam/return",
+  //   passport.authenticate("steam", { failureRedirect: "/" }),
+  //   function (req, res) {
+  //     console.log("-------------------------");
+  //     console.log(res.req.user.id);
+  //     console.log("-------------------------");
+  //     const steamId = res.req.user.id;
+  //     res.redirect("/");
+  //     /* Returns the result */
+  //     return res.end(JSON.stringify({ success: true, data: { steamId } }));
+  //   }
+  // )
+
   .use(json())
   .use(
     compression({ threshold: 0 }),

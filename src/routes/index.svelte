@@ -2,215 +2,111 @@
   import { fly } from "svelte/transition";
 
   import { appStore } from "../stores";
-  import asyncForEach from "../utils/asyncForEach";
-  import findSimilar from "../utils/findSimilar";
   import {
     getLocalStorage,
     saveLocalStorage
   } from "../utils/localStorageHandler";
-  import { fetchGames } from "../components/FetchGames.svelte";
-  import Checkbox from "../components/Checkbox.svelte";
-  import Button from "../components/Button.svelte";
-  import Loader from "../components/Loader.svelte";
 
-  export let friendDataa;
-
-  const getFriendsInfo = async steamId => {
-    try {
-      const data = { steamId };
-
-      // associated script = /src/routes/process/gameInfo.js
-      const url = "/process/friends";
-
-      // request general info about friends
-      const res = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
-
-      const friendInfo = await res.json();
-      console.log(friendInfo.data.friendDataa);
-      return friendInfo.data.friendDataa;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  if (process.browser) {
-    const ls = getLocalStorage("appStore");
-    if (ls) {
-      $appStore = ls;
-    } else {
-      $appStore.friends = getFriendsInfo("76561198029394113").then(
-        data => ($appStore.friends = data)
-      );
-      console.log($appStore);
-    }
+  const handleSteamAuth = () => {
+    console.log("do stuff")
   }
-
-  const getSameGames = selectedFriendsArr => {
-    const allGames = selectedFriendsArr.map(friend => {
-      console.log(friend);
-      const games = friend.games;
-
-      const gameAppIds = games.map(game => game.appid);
-
-      return gameAppIds;
-    });
-
-    return findSimilar(allGames);
-  };
-
-  const getGameInfo = async sameGames => {
-    try {
-      await asyncForEach(sameGames, async appId => {
-        const data = { appId };
-
-        // associated script = /src/routes/process/gameInfo.js
-        const url = "/process/gameInfo";
-
-        // request steam store game info of this game
-        const res = await fetch(url, {
-          method: "POST",
-          body: JSON.stringify(data),
-          headers: {
-            "Content-Type": "application/json"
-          }
-        });
-
-        const gameInfo = (await res.json()).data.gameInfo[appId].data;
-
-        console.log(gameInfo);
-
-        // save game Info in appStore
-        if (gameInfo) $appStore.sameGames = [...$appStore.sameGames, gameInfo];
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const getGamesOfFriends = async () => {
-    await asyncForEach($appStore.selectedFriends, async (friend, index) => {
-      console.log($appStore.selectedFriends);
-      const friendSteamId = friend.steamid;
-      const data = { friendSteamId };
-
-      // associated script = /src/routes/process/games.js
-      const url = "/process/games";
-
-      // request all games of this friend
-      const res = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
-
-      const games = (await res.json()).data.games.response.games;
-
-      // slam this games in to the sellectedFriend Object in the selectedFriends array
-      $appStore.selectedFriends[index] = {
-        ...$appStore.selectedFriends[index],
-        games
-      };
-    });
-  };
-
-  const handleSelectedFriend = e => {
-    const friendIndex = e.detail;
-
-    console.log($appStore.friends);
-
-    $appStore.selectedFriends = [
-      ...$appStore.selectedFriends,
-      $appStore.friends[friendIndex]
-    ];
-  };
-
-  const handleWhat2Game = async e => {
-    await getGamesOfFriends();
-
-    console.log($appStore);
-
-    const sameGames = getSameGames($appStore.selectedFriends);
-
-    console.log(sameGames);
-
-    await getGameInfo(sameGames);
-
-    console.log($appStore);
-
-    saveLocalStorage($appStore, "appStore");
-  };
 </script>
 
 <style>
-  .friend {
-    display: flex;
-    align-items: center;
-    padding: 1rem;
-    box-shadow: 1px 4px 10px 0px rgba(0, 0, 0, 0.05);
+  form {
+    margin: 20px;
+    padding: 20px;
   }
-
-  .avatar {
-    width: 7rem;
-    height: auto;
-    margin-left: 3rem;
+  .material {
+    position: relative;
+    padding: 0;
+    margin: 5px;
+    border: none;
+    overflow: visible;
   }
-
-  .name {
-    margin-left: 2rem;
+  .material input {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 12px 10px 8px;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    border-bottom: 3px solid #eee;
+    background-color: transparent;
+    font-size: 120%;
+    outline: none;
+    cursor: text;
+  }
+  .material input::-webkit-input-placeholder {
+    -webkit-transition: color 300ms ease;
+    transition: color 300ms ease;
+  }
+  .material input:not(:focus)::-webkit-input-placeholder {
+    color: transparent;
+  }
+  .material hr {
+    content: "";
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 2px;
+    border: none;
+    background: #333;
+    font-size: 1px;
+    will-change: transform, visibility;
+    -webkit-transition: all 200ms ease-out;
+    transition: all 200ms ease-out;
+    -webkit-transform: scaleX(0);
+    transform: scaleX(0);
+    visibility: hidden;
+    z-index: 10;
+  }
+  .material input:focus ~ hr {
+    -webkit-transform: scaleX(1);
+    transform: scaleX(1);
+    visibility: visible;
+  }
+  .material label {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 120%;
+    color: #eee;
+    -webkit-transform-origin: 0 -150%;
+    transform-origin: 0 -150%;
+    -webkit-transition: -webkit-transform 300ms ease;
+    transition: -webkit-transform 300ms ease;
+    transition: transform 300ms ease;
+    transition: transform 300ms ease, -webkit-transform 300ms ease;
+    pointer-events: none;
+  }
+  .material input:focus ~ label,
+  .material input:valid ~ label {
+    -webkit-transform: scale(0.6);
+    transform: scale(0.6);
   }
 </style>
 
-<svelte:head>
-  <title>Sapper project template</title>
-</svelte:head>
+<h2>Enter your Steam ID or Login via Steam</h2>
 
-{#await $appStore.friends}
-  <Loader />
-{:then friends}
+<form>
+  <fieldset class="material">
+    <input
+      type="text"
+      placeholder="01234567899876543"
+      autocomplete="off"
+      required />
+    <hr />
+    <label>Steam ID</label>
+  </fieldset>
+</form>
 
-  {#if friends && !$appStore.sameGames[0]}
-    {#each friends as friend, index}
-      <div class="friend" transition:fly={{ duration: 200, x: -200 }}>
-        <Checkbox id={index} on:checked={handleSelectedFriend} />
-        <img
-          class="avatar"
-          src={friend.avatarfull}
-          alt={`Avatar image of ${friend.personaname}`}
-          loading="lazy"
-          width="70"
-          height="70" />
-        <p class="name">{friend.personaname}</p>
-      </div>
-    {/each}
-
-    <Button on:click={handleWhat2Game} />
-  {:else if !friendDataa && !$appStore.sameGames[0]}
-    <p>no Friends :(</p>
-  {/if}
-{/await}
-
-{#if $appStore.sameGames}
-  {#each $appStore.sameGames as game (game.steam_appid)}
-    <div class="game" transition:fly={{ duration: 1000, x: -200 }}>
-      <h2>{game.name}</h2>
-      <img
-        class="gameImg"
-        src={game.header_image}
-        alt={`Header image of ${game.name}`} />
-      <ul class="categorieList">
-        {#each game.categories as categorie}
-          <li class="categorie">{categorie.description}</li>
-        {/each}
-      </ul>
-
-    </div>
-  {/each}
-{/if}
+<div>
+  <a href="/auth/login" on:click={handleSteamAuth}>
+    <img src="/sits_02.png" alt="steam login btn" />
+  </a>
+</div>
