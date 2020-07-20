@@ -95,15 +95,23 @@ express() // You can also use Express
       console.log("-------------------------");
       const steamId = res.req.user.id;
 
+      res.redirect(`/?steamID=${steamId}`);
+
       /* Returns steamID */
-      res.status(200).json({
-        success: true,
-        data: {
-          steamId,
-        },
-      });
+      // res.status(200).json({--
+      //   success: true,
+      //   data: {
+      //     steamId,
+      //   },
+      // });
     }
   )
+  .get("/", (req, res, next) => {
+    if (!req.query) return;
+    const steamId = req.query;
+    console.log(steamId);
+    next();
+  })
 
   // .get(
   //   "/auth/steam/return",

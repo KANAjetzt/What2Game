@@ -8,7 +8,17 @@
   } from "../utils/localStorageHandler";
 
   const handleSteamAuth = () => {
-    console.log("do stuff")
+    console.log("do stuff");
+  };
+
+  const getSteamIdFromQueryString = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const steamId = urlParams.get("steamID");
+    console.log(steamId);
+  };
+
+  if (process.browser) {
+    getSteamIdFromQueryString();
   }
 </script>
 
