@@ -14,11 +14,17 @@
   const getSteamIdFromQueryString = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const steamId = urlParams.get("steamID");
-    console.log(steamId);
+    return steamId;
+  };
+
+  const addSteamIdToInput = steamId => {
+    const SteamIdInput = document.getElementById("steamId");
+    SteamIdInput.value = steamId;
   };
 
   if (process.browser) {
-    getSteamIdFromQueryString();
+    const steamId = getSteamIdFromQueryString();
+    addSteamIdToInput(steamId);
   }
 </script>
 
@@ -43,6 +49,7 @@
     box-shadow: none;
     border-bottom: 3px solid #eee;
     background-color: transparent;
+    color: #eee;
     font-size: 120%;
     outline: none;
     cursor: text;
@@ -106,6 +113,8 @@
 <form>
   <fieldset class="material">
     <input
+      id="steamId"
+      name="steamId"
       type="text"
       placeholder="01234567899876543"
       autocomplete="off"
