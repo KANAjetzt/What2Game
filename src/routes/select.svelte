@@ -54,8 +54,8 @@
     }
   }
 
-  const getSameGames = selectedFriendsArr => {
-    const allGames = selectedFriendsArr.map(friend => {
+  const getAppIdsFromFriends = FriendsArr => {
+    const games = FriendsArr.map(friend => {
       console.log(friend);
       const games = friend.games;
 
@@ -64,8 +64,10 @@
       return gameAppIds;
     });
 
-    return findSimilar(allGames);
+    return games;
   };
+
+  const getSameGames = games => findSimilar(games);
 
   const getGameInfo = async sameGames => {
     try {
@@ -162,10 +164,16 @@
 
     console.log($appStore);
 
-    const sameGames = getSameGames($appStore.selectedFriends);
+    const friendsAppIds = getAppIdsFromFriends($appStore.selectedFriends);
+    const userAppIds = getAppIdsFromFriends([$appStore.user]);
+
+    const appIds = [...friendsAppIds, ...userAppIds];
+
+    const sameGames = getSameGames(appIds);
 
     console.log(sameGames);
 
+    // get's gameInfo and saves same games in appStore
     await getGameInfo(sameGames);
 
     console.log($appStore);

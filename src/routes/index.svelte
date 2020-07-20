@@ -24,14 +24,16 @@
   };
 
   if (process.browser) {
-    const steamId = getSteamIdFromQueryString();
-    addSteamIdToInput(steamId);
+    if (!$appStore.user.steamId) {
+      const steamId = getSteamIdFromQueryString();
+      addSteamIdToInput(steamId);
 
-    // Add SteamId to appStore
-    if (steamId) $appStore.user.steamId = steamId;
+      // Add SteamId to appStore
+      if (steamId) $appStore.user.steamId = steamId;
 
-    // Save Store to LocalStorage
-    saveLocalStorage($appStore, "appStore");
+      // Save Store to LocalStorage
+      saveLocalStorage($appStore, "appStore");
+    }
   }
 </script>
 
