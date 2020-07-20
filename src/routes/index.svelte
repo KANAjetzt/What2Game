@@ -6,6 +6,7 @@
     getLocalStorage,
     saveLocalStorage
   } from "../utils/localStorageHandler";
+  import Button from "../components/Button.svelte";
 
   const handleSteamAuth = () => {
     console.log("do stuff");
@@ -25,6 +26,12 @@
   if (process.browser) {
     const steamId = getSteamIdFromQueryString();
     addSteamIdToInput(steamId);
+
+    // Add SteamId to appStore
+    if (steamId) $appStore.user.steamId = steamId;
+
+    // Save Store to LocalStorage
+    saveLocalStorage($appStore, "appStore");
   }
 </script>
 
@@ -118,7 +125,8 @@
       type="text"
       placeholder="01234567899876543"
       autocomplete="off"
-      required />
+      required
+      value={$appStore.user.steamId ? $appStore.user.steamId : null} />
     <hr />
     <label>Steam ID</label>
   </fieldset>
@@ -129,3 +137,7 @@
     <img src="/sits_02.png" alt="steam login btn" />
   </a>
 </div>
+
+<a href="/select">
+  <Button>GO !</Button>
+</a>

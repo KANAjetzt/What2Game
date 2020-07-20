@@ -33,4 +33,6 @@
   }
 </style>
 
-<button class="btn" on:click={() => dispatch('click')}>What2Game</button>
+<button class="btn" on:click={() => dispatch('click')}>
+  <slot />
+</button>

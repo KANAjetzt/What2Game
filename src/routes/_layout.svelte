@@ -1,6 +1,16 @@
 <script>
+  import { appStore } from "../stores.js";
+  import {
+    getLocalStorage,
+    saveLocalStorage
+  } from "../utils/localStorageHandler";
   import NeonText from "../components/NeonText.svelte";
   import Nav from "../components/Nav.svelte";
+
+  if (process.browser) {
+    const ls = getLocalStorage("appStore");
+    ls ? ($appStore = ls) : null;
+  }
 </script>
 
 <style>

@@ -40,11 +40,14 @@
   };
 
   if (process.browser) {
-    const ls = getLocalStorage("appStore");
-    if (ls) {
-      $appStore = ls;
+    console.log($appStore);
+
+    const lsFriendData = getLocalStorage("appStore").friends;
+
+    if (lsFriendData[0]) {
+      $appStore.friends = lsFriendData;
     } else {
-      $appStore.friends = getFriendsInfo("76561198029394113").then(
+      $appStore.friends = getFriendsInfo($appStore.user.steamId).then(
         data => ($appStore.friends = data)
       );
       console.log($appStore);
@@ -93,6 +96,27 @@
     }
   };
 
+  const getGamesOfUser = async () => {
+    const data = { friendSteamId: $appStore.user.steamId };
+
+    // associated script = /src/routes/process/games.js
+    const url = "/process/games";
+
+    // request all games
+    const res = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    const games = (await res.json()).data.games.response.games;
+
+    $appStore.user.games = games;
+    console.log($appStore);
+  };
+
   const getGamesOfFriends = async () => {
     await asyncForEach($appStore.selectedFriends, async (friend, index) => {
       console.log($appStore.selectedFriends);
@@ -133,6 +157,7 @@
   };
 
   const handleWhat2Game = async e => {
+    await getGamesOfUser();
     await getGamesOfFriends();
 
     console.log($appStore);
@@ -191,7 +216,7 @@
       </div>
     {/each}
 
-    <Button on:click={handleWhat2Game} />
+    <Button on:click={handleWhat2Game}>What2Game</Button>
   {:else if !friendDataa && !$appStore.sameGames[0]}
     <p>no Friends :(</p>
   {/if}
