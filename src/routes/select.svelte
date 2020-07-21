@@ -179,6 +179,9 @@
     console.log($appStore);
 
     saveLocalStorage($appStore, "appStore");
+
+    // similar behavior as an HTTP redirect
+    window.location.replace("/games");
   };
 </script>
 
@@ -209,41 +212,22 @@
   <Loader />
 {:then friends}
 
-  {#if friends && !$appStore.sameGames[0]}
-    {#each friends as friend, index}
-      <div class="friend" transition:fly={{ duration: 200, x: -200 }}>
-        <Checkbox id={index} on:checked={handleSelectedFriend} />
-        <img
-          class="avatar"
-          src={friend.avatarfull}
-          alt={`Avatar image of ${friend.personaname}`}
-          loading="lazy"
-          width="70"
-          height="70" />
-        <p class="name">{friend.personaname}</p>
-      </div>
-    {/each}
+  {#each friends as friend, index}
+    <div class="friend" transition:fly={{ duration: 200, x: -200 }}>
+      <Checkbox id={index} on:checked={handleSelectedFriend} />
+      <img
+        class="avatar"
+        src={friend.avatarfull}
+        alt={`Avatar image of ${friend.personaname}`}
+        loading="lazy"
+        width="70"
+        height="70" />
+      <p class="name">{friend.personaname}</p>
+    </div>
+  {/each}
 
-    <Button on:click={handleWhat2Game}>What2Game</Button>
-  {:else if !friendDataa && !$appStore.sameGames[0]}
+  <Button on:click={handleWhat2Game}>What2Game</Button>
+  {#if !friendDataa && !$appStore.sameGames[0]}
     <p>no Friends :(</p>
   {/if}
 {/await}
-
-{#if $appStore.sameGames}
-  {#each $appStore.sameGames as game (game.steam_appid)}
-    <div class="game" transition:fly={{ duration: 1000, x: -200 }}>
-      <h2>{game.name}</h2>
-      <img
-        class="gameImg"
-        src={game.header_image}
-        alt={`Header image of ${game.name}`} />
-      <ul class="categorieList">
-        {#each game.categories as categorie}
-          <li class="categorie">{categorie.description}</li>
-        {/each}
-      </ul>
-
-    </div>
-  {/each}
-{/if}

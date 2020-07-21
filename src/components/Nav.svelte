@@ -56,12 +56,12 @@
       </a>
     </li>
     <li>
-      <a aria-current={segment === 'about' ? 'page' : undefined} href="/select">
+      <a aria-current={segment === 'select' ? 'page' : undefined} href="select">
         Select Friends
       </a>
     </li>
     <li>
-      <a aria-current={segment === 'about' ? 'page' : undefined} href="/games">
+      <a aria-current={segment === 'games' ? 'page' : undefined} href="games">
         Same Games
       </a>
     </li>

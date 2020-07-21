@@ -11,6 +11,8 @@
     const ls = getLocalStorage("appStore");
     ls ? ($appStore = ls) : null;
   }
+
+  export let segment;
 </script>
 
 <style>
@@ -33,7 +35,7 @@
 
 <!-- Neon Text 4 later maybe :) -->
 <!-- <NeonText /> -->
-<Nav />
+<Nav {segment} />
 <main>
   <slot />
 </main>
