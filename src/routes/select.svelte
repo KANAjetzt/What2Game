@@ -189,12 +189,12 @@
   .friend {
     display: flex;
     align-items: center;
-    padding: 1rem;
+    padding: 0.5rem 0;
     box-shadow: 1px 4px 10px 0px rgba(0, 0, 0, 0.05);
   }
 
   .avatar {
-    width: 7rem;
+    width: 3rem;
     height: auto;
     margin-left: 3rem;
   }
@@ -220,8 +220,8 @@
         src={friend.avatarfull}
         alt={`Avatar image of ${friend.personaname}`}
         loading="lazy"
-        width="70"
-        height="70" />
+        width="50"
+        height="50" />
       <p class="name">{friend.personaname}</p>
     </div>
   {/each}

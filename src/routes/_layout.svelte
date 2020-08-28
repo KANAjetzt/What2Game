@@ -27,7 +27,6 @@
     max-width: 56em;
     background-color: #333;
     color: #eee;
-    padding: 2em;
     margin: 0 auto;
     box-sizing: border-box;
   }
