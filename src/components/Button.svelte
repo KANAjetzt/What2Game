@@ -6,12 +6,12 @@
 
 <style>
   .btn {
+    width: 100%;
     font-family: inherit;
     font-size: inherit;
     cursor: pointer;
     padding: 25px 80px;
     display: inline-block;
-    margin: 15px 30px;
     color: #333;
     background: #eee;
     border: 4px solid #eee;

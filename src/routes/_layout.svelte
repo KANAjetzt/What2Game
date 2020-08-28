@@ -24,6 +24,7 @@
   main {
     display: grid;
     position: relative;
+    min-height: 100vh;
     max-width: 56em;
     background-color: #333;
     color: #eee;

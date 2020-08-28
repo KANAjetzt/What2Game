@@ -39,22 +39,29 @@
 </script>
 
 <style>
-  form {
-    margin: 20px;
-    padding: 20px;
+  h2 {
+    margin-top: 2rem;
+  }
+  .steamBtn {
+    margin-top: 1rem;
   }
 </style>
 
-<h2>Enter your Steam ID or Login via Steam</h2>
-
-<form>
-  <TextInput />
-</form>
+<h2>Steam Login / SteamID</h2>
 
 <div>
-  <a href="/auth/login" on:click={handleSteamAuth}>
-    <img src="/sits_02.png" alt="steam login btn" />
-  </a>
+  <form>
+    <TextInput />
+  </form>
+  <div class="steamBtn">
+    <a href="/auth/login" on:click={handleSteamAuth}>
+      <img src="/sits_02.png" alt="steam login btn" />
+    </a>
+  </div>
+  <p>
+    Login via Steam or enter your SteamID, so you can select your friends in the
+    next step.
+  </p>
 </div>
 
 <a href="/select">

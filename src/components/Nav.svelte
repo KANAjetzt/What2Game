@@ -6,7 +6,7 @@
   nav {
     border-bottom: 1px solid rgb(238, 238, 238, 0.5);
     font-weight: 300;
-    padding: 0 1em;
+    padding: 0 1rem;
   }
 
   ul {
