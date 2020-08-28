@@ -1,7 +1,7 @@
 <script>
   import { fly } from "svelte/transition";
 
-  import { appStore } from "../stores";
+  import { appStore, sortedFriends } from "../stores";
   import asyncForEach from "../utils/asyncForEach";
   import findSimilar from "../utils/findSimilar";
   import {
@@ -13,7 +13,8 @@
   import Button from "../components/Button.svelte";
   import Loader from "../components/Loader.svelte";
 
-  export let friendDataa;
+  let friendDataa;
+  let sortedFriendss = $sortedFriends;
 
   const getFriendsInfo = async steamId => {
     try {
@@ -32,7 +33,6 @@
       });
 
       const friendInfo = await res.json();
-      console.log(friendInfo.data.friendDataa);
       return friendInfo.data.friendDataa;
     } catch (err) {
       console.log(err);
@@ -40,8 +40,6 @@
   };
 
   if (process.browser) {
-    console.log($appStore);
-
     const lsFriendData = getLocalStorage("appStore").friends;
 
     if (lsFriendData[0]) {
@@ -50,13 +48,11 @@
       $appStore.friends = getFriendsInfo($appStore.user.steamId).then(
         data => ($appStore.friends = data)
       );
-      console.log($appStore);
     }
   }
 
   const getAppIdsFromFriends = FriendsArr => {
     const games = FriendsArr.map(friend => {
-      console.log(friend);
       const games = friend.games;
 
       const gameAppIds = games.map(game => game.appid);
@@ -88,8 +84,6 @@
 
         const gameInfo = (await res.json()).data.gameInfo[appId].data;
 
-        console.log(gameInfo);
-
         // save game Info in appStore
         if (gameInfo) $appStore.sameGames = [...$appStore.sameGames, gameInfo];
       });
@@ -116,12 +110,10 @@
     const games = (await res.json()).data.games.response.games;
 
     $appStore.user.games = games;
-    console.log($appStore);
   };
 
   const getGamesOfFriends = async () => {
     await asyncForEach($appStore.selectedFriends, async (friend, index) => {
-      console.log($appStore.selectedFriends);
       const friendSteamId = friend.steamid;
       const data = { friendSteamId };
 
@@ -150,8 +142,6 @@
   const handleSelectedFriend = e => {
     const friendIndex = e.detail;
 
-    console.log($appStore.friends);
-
     $appStore.selectedFriends = [
       ...$appStore.selectedFriends,
       $appStore.friends[friendIndex]
@@ -162,8 +152,6 @@
     await getGamesOfUser();
     await getGamesOfFriends();
 
-    console.log($appStore);
-
     const friendsAppIds = getAppIdsFromFriends($appStore.selectedFriends);
     const userAppIds = getAppIdsFromFriends([$appStore.user]);
 
@@ -171,12 +159,8 @@
 
     const sameGames = getSameGames(appIds);
 
-    console.log(sameGames);
-
     // get's gameInfo and saves same games in appStore
     await getGameInfo(sameGames);
-
-    console.log($appStore);
 
     saveLocalStorage($appStore, "appStore");
 
@@ -209,7 +193,7 @@
 </svelte:head>
 
 {#await $appStore.friends}
-  <Loader />
+  <Loader style="fullPageCentered" />
 {:then friends}
 
   {#each friends as friend, index}

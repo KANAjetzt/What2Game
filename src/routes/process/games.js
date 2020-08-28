@@ -11,8 +11,6 @@ export async function post(req, res, next) {
     `http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=2F15898C280E0CD2F2D007CEB140476E&steamid=${steamId}&include_played_free_games=true&include_appinfo=true&format=json`
   );
 
-  // console.log(gameReq);
-
   const games = gameReq.data;
 
   /* Returns the result */
