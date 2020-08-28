@@ -18,3 +18,12 @@
 
   </div>
 {/each}
+
+<style>
+.game {
+  padding: 1rem 0;
+}
+.gameImg {
+  width: 100vw;
+}
+</style>
