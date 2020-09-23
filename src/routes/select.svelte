@@ -8,10 +8,12 @@
     getLocalStorage,
     saveLocalStorage
   } from "../utils/localStorageHandler";
+  import { removeMessage, addMessage } from "../utils/errorHandler";
   import { fetchGames } from "../components/FetchGames.svelte";
   import Checkbox from "../components/Checkbox.svelte";
   import Button from "../components/Button.svelte";
   import Loader from "../components/Loader.svelte";
+  import Message from "../components/Message.svelte";
 
   let friendDataa;
   let sortedFriendss = $sortedFriends;
@@ -45,9 +47,24 @@
     if (lsFriendData[0]) {
       $appStore.friends = lsFriendData;
     } else {
-      $appStore.friends = getFriendsInfo($appStore.user.steamId).then(
-        data => ($appStore.friends = data)
-      );
+      // Check if SteamID is there
+      if (!$appStore.user.steamId) {
+        $appStore.messages = addMessage(
+          $appStore.messages,
+          "Error",
+          "steamIdFriendSelect",
+          "No Steam ID - pleas enter your Steam ID"
+        );
+      } else {
+        $appStore.messages = removeMessage(
+          $appStore.messages,
+          "steamIdFriendSelect"
+        );
+
+        $appStore.friends = getFriendsInfo($appStore.user.steamId).then(
+          data => ($appStore.friends = data)
+        );
+      }
     }
   }
 
@@ -189,7 +206,7 @@
 </style>
 
 <svelte:head>
-  <title>Sapper project template</title>
+  <title>Friend Selection</title>
 </svelte:head>
 
 {#await $appStore.friends}

@@ -5,6 +5,7 @@ export const appStore = writable({
   friends: [],
   selectedFriends: [],
   sameGames: [],
+  messages: [],
 });
 
 // Sort Friends ABC
@@ -15,10 +16,4 @@ export const sortedFriends = derived(appStore, ($appStore) => {
   let { friends } = $appStore;
 
   friends.sort((a, b) => a.personaname.localeCompare(b.personaname));
-
-  console.log(friends);
-
-  // 2) get Friend name
-  // const names = friends.map((friend) => friend.personaname);
-  // console.log(names);
 });
