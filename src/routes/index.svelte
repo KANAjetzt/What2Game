@@ -39,15 +39,34 @@
 </script>
 
 <style>
-  h2 {
-    margin-top: 2rem;
+  :global(body) {
+    background-image: url("/Stars-medium.jpg");
+    background-size: cover;
+    backdrop-filter: blur(8px);
+    min-height: 100vh;
   }
+
   .steamBtn {
     margin-top: 1rem;
   }
+
+  h2 {
+    padding: 0 2rem;
+    font-size: 4.5rem;
+    max-width: 75vw;
+    margin: auto;
+  }
+
+  p {
+    padding: 0 2rem;
+    max-width: 75vw;
+    margin: auto;
+    margin-top: 2rem;
+  }
 </style>
 
-<h2>Steam Login / SteamID</h2>
+<h2>Find Games to play together!</h2>
+<p>Enter your Steam ID or Login through Steam to get started.</p>
 
 <div>
   <form>
@@ -58,12 +77,8 @@
       <img src="/sits_02.png" alt="steam login btn" />
     </a>
   </div>
-  <p>
-    Login via Steam or enter your SteamID, so you can select your friends in the
-    next step.
-  </p>
 </div>
 
-<a href="/select">
+<!-- <a href="/select">
   <Button>GO !</Button>
-</a>
+</a> -->

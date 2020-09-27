@@ -16,24 +16,6 @@
   export let segment;
 </script>
 
-<style>
-  :global(body) {
-    background-color: #333;
-    color: #eee;
-  }
-
-  main {
-    display: grid;
-    position: relative;
-    min-height: 100vh;
-    max-width: 56em;
-    background-color: #333;
-    color: #eee;
-    margin: 0 auto;
-    box-sizing: border-box;
-  }
-</style>
-
 {#if $appStore.messages[0]}
   {#each $appStore.messages as message}
     {#if message.toast}
@@ -42,7 +24,7 @@
   {/each}
 {/if}
 
-<Nav {segment} />
+<!-- <Nav {segment} /> -->
 <main>
   <slot />
 </main>
