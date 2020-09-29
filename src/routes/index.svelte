@@ -46,37 +46,54 @@
     min-height: 100vh;
   }
 
+  .grid {
+    display: grid;
+    grid-template-rows: 25% min-content min-content 10%;
+    min-height: 100vh;
+  }
+
+  .info {
+    grid-row: 2 / 3;
+    padding: 0 1rem;
+    max-width: 75vw;
+    margin: auto;
+  }
+
+  .login {
+    grid-row: 3 / 4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
   .steamBtn {
-    margin-top: 1rem;
+    margin-top: 5rem;
   }
 
   h2 {
-    padding: 0 2rem;
     font-size: 4.5rem;
-    max-width: 75vw;
-    margin: auto;
   }
-
   p {
-    padding: 0 2rem;
-    max-width: 75vw;
-    margin: auto;
     margin-top: 2rem;
   }
 </style>
 
-<h2>Find Games to play together!</h2>
-<p>Enter your Steam ID or Login through Steam to get started.</p>
-
-<div>
-  <form>
-    <TextInput />
-  </form>
-  <div class="steamBtn">
-    <a href="/auth/login" on:click={handleSteamAuth}>
-      <img src="/sits_02.png" alt="steam login btn" />
-    </a>
+<div class="grid">
+  <div class="info">
+    <h2>Find Games to play together!</h2>
+    <p>Enter your Steam ID or Login through Steam to get started.</p>
   </div>
+
+  <div class="login">
+
+    <TextInput />
+
+    <div class="steamBtn">
+      <a href="/auth/login" on:click={handleSteamAuth}>
+        <img src="/sits_02.png" alt="steam login btn" />
+      </a>
+    </div>
+  </div>
+
 </div>
 
 <!-- <a href="/select">

@@ -3,91 +3,58 @@
 </script>
 
 <style>
-  .material {
-    position: relative;
-    padding: 0;
-    margin: 5px;
+  .steamId {
+    margin: auto;
+    margin-top: 2rem;
+    font-size: 1.5rem;
+    font-family: inherit;
+    color: inherit;
+    padding: 1.5rem 2rem;
+    border-radius: 2px;
+    background-color: rbga(#fff, 0.5);
     border: none;
-    overflow: visible;
-  }
-  .material input {
-    box-sizing: border-box;
-    width: 100%;
-    padding: 12px 10px 8px;
-    border: none;
-    border-radius: 0;
-    box-shadow: none;
-    border-bottom: 3px solid #eee;
-    background-color: transparent;
-    color: #eee;
-    font-size: 120%;
-    outline: none;
-    cursor: text;
-  }
-  .material input::-webkit-input-placeholder {
-    -webkit-transition: color 300ms ease;
-    transition: color 300ms ease;
-  }
-  .material input:not(:focus)::-webkit-input-placeholder {
-    color: transparent;
-  }
-  .material hr {
-    content: "";
+    border-bottom: 3px solid transparent;
+    width: 75%;
     display: block;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 2px;
-    border: none;
-    background: #333;
-    font-size: 1px;
-    will-change: transform, visibility;
-    -webkit-transition: all 200ms ease-out;
-    transition: all 200ms ease-out;
-    -webkit-transform: scaleX(0);
-    transform: scaleX(0);
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+  }
+
+  .steamId:focus:invalid {
+    border-bottom: 3px solid #df7976;
+  }
+  .steamId:focus {
+    outline: none;
+    -webkit-box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
+    border-bottom: 3px solid #55c57a;
+  }
+
+  input:placeholder-shown + label {
+    opacity: 0;
     visibility: hidden;
-    z-index: 10;
+    transform: translateY(-4rem);
   }
-  .material input:focus ~ hr {
-    -webkit-transform: scaleX(1);
-    transform: scaleX(1);
-    visibility: visible;
-  }
-  .material label {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    font-size: 120%;
-    color: #eee;
-    -webkit-transform-origin: 0 -150%;
-    transform-origin: 0 -150%;
-    -webkit-transition: -webkit-transform 300ms ease;
-    transition: -webkit-transform 300ms ease;
-    transition: transform 300ms ease;
-    transition: transform 300ms ease, -webkit-transform 300ms ease;
-    pointer-events: none;
-  }
-  .material input:focus ~ label,
-  .material input:valid ~ label {
-    -webkit-transform: scale(0.6);
-    transform: scale(0.6);
+
+  label {
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-left: 6.2rem;
+    margin-top: 0.7rem;
+    display: block;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
   }
 </style>
 
-<fieldset class="material">
-  <input
-    id="steamId"
-    name="steamId"
-    type="text"
-    placeholder="01234567899876543"
-    autocomplete="off"
-    required
-    value={$appStore.user.steamId ? $appStore.user.steamId : null} />
-  <hr />
-  <label>Steam ID</label>
-</fieldset>
-
+<input
+  class="steamId"
+  id="steamId"
+  name="steamId"
+  type="text"
+  placeholder="Steam ID"
+  autocomplete="off"
+  required
+  value={$appStore.user.steamId ? $appStore.user.steamId : null} />
+<label>Steam ID</label>

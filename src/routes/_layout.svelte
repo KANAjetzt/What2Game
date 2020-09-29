@@ -16,6 +16,12 @@
   export let segment;
 </script>
 
+<style>
+  main {
+    min-height: 100vh;
+  }
+</style>
+
 {#if $appStore.messages[0]}
   {#each $appStore.messages as message}
     {#if message.toast}
