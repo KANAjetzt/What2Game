@@ -37,6 +37,7 @@
   }
 
   label {
+    align-self: flex-start;
     color: #fff;
     font-size: 1.2rem;
     font-weight: 700;
