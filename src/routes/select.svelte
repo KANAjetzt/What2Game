@@ -10,10 +10,12 @@
   } from "../utils/localStorageHandler";
   import { removeMessage, addMessage } from "../utils/errorHandler";
   import { fetchGames } from "../components/FetchGames.svelte";
-  import Checkbox from "../components/Checkbox.svelte";
+  import FriendCard from "../components/FriendCard.svelte";
   import Button from "../components/Button.svelte";
   import Loader from "../components/Loader.svelte";
   import Message from "../components/Message.svelte";
+
+  $appStore.currentPage = "select";
 
   let friendDataa;
   let sortedFriendss = $sortedFriends;
@@ -42,7 +44,7 @@
   };
 
   if (process.browser) {
-    const lsFriendData = getLocalStorage("appStore").friends;
+    const lsFriendData = $appStore.friends;
 
     if (lsFriendData[0]) {
       $appStore.friends = lsFriendData;
@@ -187,21 +189,13 @@
 </script>
 
 <style>
-  .friend {
-    display: flex;
-    align-items: center;
-    padding: 0.5rem 0;
-    box-shadow: 1px 4px 10px 0px rgba(0, 0, 0, 0.05);
+  .info {
+    padding: 1.5rem;
+    margin-top: 2rem;
   }
 
-  .avatar {
-    width: 3rem;
-    height: auto;
-    margin-left: 3rem;
-  }
-
-  .name {
-    margin-left: 2rem;
+  .infoText {
+    color: #5da67c;
   }
 </style>
 
@@ -209,22 +203,17 @@
   <title>Friend Selection</title>
 </svelte:head>
 
+<div class="info">
+  <h3>Select Friends you want to game with!</h3>
+  <p class="infoText">You can select up to 8 friends.</p>
+</div>
+
 {#await $appStore.friends}
   <Loader style="fullPageCentered" />
 {:then friends}
 
   {#each friends as friend, index}
-    <div class="friend" transition:fly={{ duration: 200, x: -200 }}>
-      <Checkbox id={index} on:checked={handleSelectedFriend} />
-      <img
-        class="avatar"
-        src={friend.avatarfull}
-        alt={`Avatar image of ${friend.personaname}`}
-        loading="lazy"
-        width="50"
-        height="50" />
-      <p class="name">{friend.personaname}</p>
-    </div>
+    <FriendCard {friend} />
   {/each}
 
   <Button on:click={handleWhat2Game}>What2Game</Button>

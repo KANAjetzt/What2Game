@@ -6,18 +6,15 @@
 
 <style>
   .btn {
-    width: 100%;
-    font-family: inherit;
-    font-size: inherit;
     cursor: pointer;
-    padding: 25px 80px;
+    padding: 1.5rem 10rem;
     display: inline-block;
-    color: #333;
-    background: #eee;
-    border: 4px solid #eee;
-    text-transform: uppercase;
+    color: #eee;
+    background-color: #5da67c;
+    border: 4px solid #5da67c;
+    font-size: 1.2rem;
+    font-weight: 400;
     letter-spacing: 1px;
-    font-weight: 700;
     outline: none;
     position: relative;
     transition: all 0.3s;

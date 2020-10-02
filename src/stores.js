@@ -6,6 +6,7 @@ export const appStore = writable({
   selectedFriends: [],
   sameGames: [],
   messages: [],
+  currentPage: [],
 });
 
 // Sort Friends ABC

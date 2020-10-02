@@ -21,7 +21,7 @@
   }
 
   .steamId:focus:invalid {
-    border-bottom: 3px solid #df7976;
+    border-bottom: 3px solid #8c884a;
   }
   .steamId:focus {
     outline: none;
@@ -57,5 +57,5 @@
   placeholder="Steam ID"
   autocomplete="off"
   required
-  value={$appStore.user.steamId ? $appStore.user.steamId : null} />
+  bind:value={$appStore.user.steamId} />
 <label>Steam ID</label>

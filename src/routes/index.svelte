@@ -9,6 +9,9 @@
   import Button from "../components/Button.svelte";
   import TextInput from "../components/TextInput.svelte";
 
+  // set current page
+  $appStore.currentPage = "index";
+
   const handleSteamAuth = () => {
     console.log("do stuff");
   };
@@ -25,31 +28,35 @@
   };
 
   if (process.browser) {
-    if (!$appStore.user.steamId) {
-      const steamId = getSteamIdFromQueryString();
-      addSteamIdToInput(steamId);
+    let steamId = $appStore.user.steamId;
 
-      // Add SteamId to appStore
-      if (steamId) $appStore.user.steamId = steamId;
+    // Check for steamId in queryString
+    if (!steamId) {
+      steamId = getSteamIdFromQueryString();
+      if (steamId) {
+        addSteamIdToInput(steamId);
 
-      // Save Store to LocalStorage
-      saveLocalStorage($appStore, "appStore");
+        // Add SteamId to appStore
+        if (steamId) $appStore.user.steamId = steamId;
+
+        // Save Store to LocalStorage
+        saveLocalStorage($appStore, "appStore");
+      }
     }
   }
 </script>
 
 <style>
-  :global(body) {
+  .background {
     background-image: url("/Stars-medium.jpg");
     background-size: cover;
-    backdrop-filter: blur(8px);
-    min-height: 100vh;
   }
 
   .grid {
     display: grid;
-    grid-template-rows: 25% min-content min-content 10%;
+    grid-template-rows: 25% min-content min-content 1fr;
     min-height: 100vh;
+    backdrop-filter: blur(8px);
   }
 
   .info {
@@ -69,6 +76,14 @@
     margin-top: 5rem;
   }
 
+  .cta {
+    grid-row: 4 / 5;
+    align-self: end;
+    display: flex;
+    justify-content: center;
+    padding: 2rem 0;
+  }
+
   h2 {
     font-size: 4.5rem;
   }
@@ -77,25 +92,35 @@
   }
 </style>
 
-<div class="grid">
-  <div class="info">
-    <h2>Find Games to play together!</h2>
-    <p>Enter your Steam ID or Login through Steam to get started.</p>
-  </div>
-
-  <div class="login">
-
-    <TextInput />
-
-    <div class="steamBtn">
-      <a href="/auth/login" on:click={handleSteamAuth}>
-        <img src="/sits_02.png" alt="steam login btn" />
-      </a>
+<div class="background">
+  <div class="grid">
+    <div class="info">
+      <h2>Find Games to play together!</h2>
+      <p>Enter your Steam ID or Login through Steam to get started.</p>
     </div>
+
+    <div class="login">
+
+      <TextInput />
+
+      <div class="steamBtn">
+        <a href="/auth/login" on:click={handleSteamAuth}>
+          <img src="/sits_02.png" alt="steam login btn" />
+        </a>
+      </div>
+    </div>
+
+    {#if $appStore.user.steamId}
+      <div class="cta" transition:fly|local={{ y: 50, duration: 200 }}>
+        <a href="/select">
+          <Button
+            on:click={() => {
+              saveLocalStorage($appStore, 'appStore');
+            }}>
+            Continue
+          </Button>
+        </a>
+      </div>
+    {/if}
   </div>
-
 </div>
-
-<!-- <a href="/select">
-  <Button>GO !</Button>
-</a> -->
