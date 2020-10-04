@@ -1,4 +1,6 @@
 <script>
+  // TODO: - on click check if games can be fetched
+
   import { fly } from "svelte/transition";
 
   import { appStore, sortedFriends } from "../stores";
