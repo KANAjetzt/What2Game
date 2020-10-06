@@ -10,7 +10,7 @@
     getLocalStorage,
     saveLocalStorage
   } from "../utils/localStorageHandler";
-  import { removeMessage, addMessage } from "../utils/errorHandler";
+  import { removeMessage, addMessage } from "../utils/messageHandler";
   import { fetchGames } from "../components/FetchGames.svelte";
   import FriendCard from "../components/FriendCard.svelte";
   import Button from "../components/Button.svelte";
@@ -113,8 +113,8 @@
     }
   };
 
-  const getGamesOfUser = async () => {
-    const data = { friendSteamId: $appStore.user.steamId };
+  const getGamesOfUser = async steamId => {
+    const data = { friendSteamId: steamId };
 
     // associated script = /src/routes/process/games.js
     const url = "/process/games";
@@ -128,9 +128,7 @@
       }
     });
 
-    const games = (await res.json()).data.games.response.games;
-
-    $appStore.user.games = games;
+    return (await res.json()).data.games.response.games;
   };
 
   const getGamesOfFriends = async () => {
@@ -160,13 +158,51 @@
     });
   };
 
-  const handleSelectedFriend = e => {
-    const friendIndex = e.detail;
+  const handleSelectedFriend = async friend => {
+    const appStoreIndex = $appStore.friends.findIndex(
+      f => f.steamid === friend.steamid
+    );
 
-    $appStore.selectedFriends = [
-      ...$appStore.selectedFriends,
-      $appStore.friends[friendIndex]
-    ];
+    // 1) Check if friend was allready selected
+    if (
+      $appStore.friends[appStoreIndex].selected === true ||
+      $appStore.friends[appStoreIndex].selected === false
+    ) {
+      $appStore.friends[appStoreIndex].selected = !$appStore.friends[
+        appStoreIndex
+      ].selected;
+      return;
+    }
+
+    // 2) Mark friend as selected
+    $appStore.friends[appStoreIndex].selected = true;
+
+    // 3) Find all Games of this friend
+    const friendGames = await getGamesOfUser(friend.steamid);
+    console.log(friendGames);
+
+    // 4) Check if we can get friends games
+    if (!friendGames) {
+      console.error("error");
+      const wait = addMessage(
+        $appStore.messages,
+        "Error",
+        "privacyFriendSelect",
+        "The Games of this person are not public!"
+      );
+
+      console.log(wait);
+    } else {
+      $appStore.messages = removeMessage(
+        $appStore.messages,
+        "privacyFriendSelect"
+      );
+
+      // 4) add them to the friend in the appStore
+      $appStore.friends[appStoreIndex].games = friendGames;
+    }
+
+    console.log($appStore);
   };
 
   const handleWhat2Game = async e => {
@@ -199,6 +235,14 @@
   .infoText {
     color: #5da67c;
   }
+
+  .inputFriend {
+    display: none;
+  }
+
+  .labelFriend {
+    display: block;
+  }
 </style>
 
 <svelte:head>
@@ -215,7 +259,14 @@
 {:then friends}
 
   {#each friends as friend, index}
-    <FriendCard {friend} />
+    <input
+      id={`friend-${index}`}
+      class="inputFriend"
+      type="checkbox"
+      on:change={handleSelectedFriend(friend)} />
+    <label class="labelFriend" for={`friend-${index}`}>
+      <FriendCard {friend} />
+    </label>
   {/each}
 
   <Button on:click={handleWhat2Game}>What2Game</Button>

@@ -12,3 +12,15 @@ http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=2F15898C280
 
 Game Info:
 https://store.steampowered.com/api/appdetails?appids=730
+
+Bazillus
+"76561197967464248"
+
+Blackcat
+"76561198012052018"
+
+"Deguran"
+"76561198050794740"
+
+"GuWant"
+"76561198235306784"

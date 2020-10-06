@@ -22,7 +22,7 @@
   }
 </style>
 
-{#if $appStore.messages && $appStore.messages[0]}
+{#if $appStore.messages[0]}
   {#each $appStore.messages as message}
     {#if message.toast}
       <TostMessage {message} />

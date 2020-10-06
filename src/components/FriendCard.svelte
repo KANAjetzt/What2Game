@@ -3,12 +3,12 @@
 
   export let friend;
 
-  console.log(friend);
-  // console.log((Date.now() / 1000 - friend.lastlogoff) * 60);
-
   const handleLastLogOff = friend => {
     // check if currently online
     if (friend.personastate !== 0) return "online";
+
+    // ceck if lastlogoff is available
+    if (!friend.lastlogoff) return "";
 
     // convert unix timestamp to js world
     const lastLogOff = friend.lastlogoff * 1000;
@@ -19,7 +19,6 @@
 
     // time difference in seconds
     const timeDif = Math.floor((currentTime - lastLogOff) / 1000);
-    console.log(timeDif);
 
     // seconds
     if (timeDif <= 60) {
@@ -92,7 +91,7 @@
 </style>
 
 <div
-  class={`friend ${friend.personastate !== 0 ? 'friend--selected' : ''}`}
+  class={`friend ${friend.selected ? 'friend--selected' : ''}`}
   transition:fly={{ duration: 200, x: -200 }}>
   <img
     class="avatar"

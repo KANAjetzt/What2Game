@@ -2,9 +2,10 @@
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
 
-  import { removeMessage, addMessage } from "../utils/errorHandler.js";
+  import { removeMessage, addMessage } from "../utils/messageHandler.js";
   import { appStore } from "../stores";
-  import ErrorIcon from "./icons/ExclamationMark.svelte";
+  import ErrorIcon from "./Icons/ExclamationMark.svelte";
+  import InfoIcon from "./Icons/Info.svelte";
 
   export let message;
   let timerWidth;
@@ -30,7 +31,14 @@
     margin: 0;
     margin-top: 5rem;
     z-index: 9999;
+  }
+
+  .toasti--error {
     background-color: rgba(179, 0, 0, 0.815);
+  }
+
+  .toasti--info {
+    background-color: var(--color-secondary);
   }
 
   :global(.toasti svg) {
@@ -75,7 +83,7 @@
 
 {#if $appStore.messages[0]}
   <div
-    class="toasti"
+    class={`toasti toasti--${message.type}`}
     transition:fly={{ x: -150, duration: 200 }}
     on:introend={() => {
       const timer = document.querySelector('.timer');
@@ -85,7 +93,12 @@
       timer.classList.add('timer__shrinking');
     }}>
 
-    <ErrorIcon width="30px" height="30px" fill="#fff" />
+    {#if message.type === 'error'}
+      <ErrorIcon width="30px" height="30px" fill="#fff" />
+    {:else if message.type === 'info'}
+      <InfoIcon width="30px" height="30px" fill="#fff" />
+    {/if}
+
     <p class="message">{message.message}</p>
     <div
       class="timer"
