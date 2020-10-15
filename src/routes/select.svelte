@@ -14,6 +14,7 @@
   import { fetchGames } from "../components/FetchGames.svelte";
   import FriendCard from "../components/FriendCard.svelte";
   import Button from "../components/Button.svelte";
+  import SelectedFriendsList from "../components/SelectedFriendsList.svelte";
   import Loader from "../components/Loader.svelte";
   import Message from "../components/Message.svelte";
 
@@ -179,7 +180,6 @@
 
     // 3) Find all Games of this friend
     const friendGames = await getGamesOfUser(friend.steamid);
-    console.log(friendGames);
 
     // 4) Check if we can get friends games
     if (!friendGames) {
@@ -201,8 +201,6 @@
       // 4) add them to the friend in the appStore
       $appStore.friends[appStoreIndex].games = friendGames;
     }
-
-    console.log($appStore);
   };
 
   const handleWhat2Game = async e => {
@@ -227,6 +225,12 @@
 </script>
 
 <style>
+  .select {
+    display: grid;
+    grid-template-rows: min-content 1fr min-content;
+    min-height: 100vh;
+  }
+
   .info {
     padding: 1.5rem;
     margin-top: 2rem;
@@ -243,34 +247,63 @@
   .labelFriend {
     display: block;
   }
+
+  .selectedFriendsList {
+    margin-top: 5rem;
+  }
+
+  .btnCTA {
+    display: flex;
+    justify-content: center;
+    padding: 4rem 2rem 2rem 2rem;
+  }
 </style>
 
 <svelte:head>
   <title>Friend Selection</title>
 </svelte:head>
 
-<div class="info">
-  <h3>Select Friends you want to game with!</h3>
-  <p class="infoText">You can select up to 8 friends.</p>
+<div class="select">
+
+  <section class="top">
+
+    <div class="info">
+      <h3>Select Friends you want to game with!</h3>
+      <p class="infoText">You can select up to 8 friends.</p>
+    </div>
+
+  </section>
+
+  {#await $appStore.friends}
+    <Loader style="fullPageCentered" />
+  {:then friends}
+
+    <section class="friendsList">
+
+      {#each friends as friend, index}
+        <input
+          id={`friend-${index}`}
+          class="inputFriend"
+          type="checkbox"
+          on:change={handleSelectedFriend(friend)} />
+        <label class="labelFriend" for={`friend-${index}`}>
+          <FriendCard {friend} />
+        </label>
+      {/each}
+
+    </section>
+
+    <section class="bottom">
+
+      <div class="selectedFriendsList">
+        <SelectedFriendsList />
+      </div>
+
+      <div class="btnCTA">
+        <Button on:click={handleWhat2Game}>What2Game</Button>
+      </div>
+
+    </section>
+  {/await}
+
 </div>
-
-{#await $appStore.friends}
-  <Loader style="fullPageCentered" />
-{:then friends}
-
-  {#each friends as friend, index}
-    <input
-      id={`friend-${index}`}
-      class="inputFriend"
-      type="checkbox"
-      on:change={handleSelectedFriend(friend)} />
-    <label class="labelFriend" for={`friend-${index}`}>
-      <FriendCard {friend} />
-    </label>
-  {/each}
-
-  <Button on:click={handleWhat2Game}>What2Game</Button>
-  {#if !friendDataa && !$appStore.sameGames[0]}
-    <p>no Friends :(</p>
-  {/if}
-{/await}

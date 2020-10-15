@@ -1,5 +1,6 @@
 <script>
   import { fly } from "svelte/transition";
+  import FriendImg from "./FriendImg.svelte";
 
   export let friend;
 
@@ -66,7 +67,6 @@
   .avatar {
     grid-column: 1 / 2;
     width: 4.5rem;
-    height: auto;
   }
 
   .info {
@@ -93,13 +93,11 @@
 <div
   class={`friend ${friend.selected ? 'friend--selected' : ''}`}
   transition:fly={{ duration: 200, x: -200 }}>
-  <img
-    class="avatar"
-    src={friend.avatarfull}
-    alt={`Avatar image of ${friend.personaname}`}
-    loading="lazy"
-    width="50"
-    height="50" />
+  <div class="avatar">
+    <FriendImg
+      src={friend.avatarfull}
+      alt={`Avatar image of ${friend.personaname}`} />
+  </div>
   <div class="info">
     <p class="name">{friend.personaname}</p>
     <p class="lastLogOff">{handleLastLogOff(friend)}</p>

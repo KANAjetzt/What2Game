@@ -3,7 +3,8 @@ import { writable, derived } from "svelte/store";
 export const appStore = writable({
   user: {},
   friends: [],
-  selectedFriends: [],
+  // removed that - So I don't have to maintain 2 redundant friend objects
+  // selectedFriends: [],
   sameGames: [],
   messages: [],
   currentPage: [],
