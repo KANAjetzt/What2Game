@@ -3,7 +3,7 @@
 
   import { fly } from "svelte/transition";
 
-  import { appStore, sortedFriends } from "../stores";
+  import { appStore, sortedFriends, selectedFriends } from "../stores";
   import asyncForEach from "../utils/asyncForEach";
   import findSimilar from "../utils/findSimilar";
   import {
@@ -22,6 +22,7 @@
 
   let friendDataa;
   let sortedFriendss = $sortedFriends;
+  let selectedFriendss = $selectedFriends;
 
   const getFriendsInfo = async steamId => {
     try {
@@ -204,10 +205,12 @@
   };
 
   const handleWhat2Game = async e => {
-    await getGamesOfUser();
+    const userGames = await getGamesOfUser($appStore.user.steamId);
+    $appStore.user.games = userGames;
+
     await getGamesOfFriends();
 
-    const friendsAppIds = getAppIdsFromFriends($appStore.selectedFriends);
+    const friendsAppIds = getAppIdsFromFriends($selectedFriends);
     const userAppIds = getAppIdsFromFriends([$appStore.user]);
 
     const appIds = [...friendsAppIds, ...userAppIds];
