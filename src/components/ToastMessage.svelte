@@ -84,7 +84,7 @@
 {#if $appStore.messages[0]}
   <div
     class={`toasti toasti--${message.type}`}
-    transition:fly={{ x: -150, duration: 200 }}
+    transition:fly|local={{ x: -150, duration: 200 }}
     on:introend={() => {
       const timer = document.querySelector('.timer');
       const timerBoundingClient = timer.getBoundingClientRect();

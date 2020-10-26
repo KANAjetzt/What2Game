@@ -92,7 +92,7 @@
 
 <div
   class={`friend ${friend.selected ? 'friend--selected' : ''}`}
-  transition:fly={{ duration: 200, x: -200 }}>
+  transition:fly|local={{ duration: 200, x: -200 }}>
   <div class="avatar">
     <FriendImg
       src={friend.avatarfull}

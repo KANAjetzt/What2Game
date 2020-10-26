@@ -8,6 +8,8 @@ export const appStore = writable({
   sameGames: [],
   messages: [],
   currentPage: [],
+  clickedGameIndex: undefined,
+  modalIsOpen: false,
 });
 
 // Sort Friends ABC
