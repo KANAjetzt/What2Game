@@ -5,10 +5,6 @@
   import Modal from "../components/Modal.svelte";
   import GameCard from "../components/GameCard.svelte";
   import ModalGame from "../components/ModalGame.svelte";
-
-  $: if ($appStore.clickedGameIndex) {
-    console.log($appStore.sameGames[$appStore.clickedGameIndex].background);
-  }
 </script>
 
 <style>

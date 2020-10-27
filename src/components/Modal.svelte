@@ -2,9 +2,9 @@
   import { appStore } from "../stores.js";
   import { onMount } from "svelte";
 
-  export let backgroundImage = undefined;
+  import BtnRemove from "../components/BtnRemove.svelte";
 
-  console.log(backgroundImage);
+  export let backgroundImage = undefined;
 
   onMount(() => {
     $appStore.modalIsOpen = true;
@@ -13,8 +13,7 @@
 
 <style>
   .backdrop {
-    display: none;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
@@ -22,18 +21,33 @@
     backdrop-filter: blur(30px);
     z-index: 1000;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
   }
 
   .modal {
-    position: relative;
-    max-width: 100vw;
-    max-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    max-width: 80rem;
     padding: 5rem;
-    overflow-y: scroll;
+    overflow-y: auto;
     background-size: cover;
     z-index: 1001;
+  }
+
+  .content {
+    grid-row: 1 / 2;
+    grid-column: 1 /2;
+  }
+
+  .btnRemove {
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+    align-self: end;
+    justify-self: end;
+    margin: -2rem;
   }
 </style>
 
@@ -45,6 +59,11 @@
   <div
     class="modal"
     style={backgroundImage ? `background-image:url(${backgroundImage})` : ''}>
-    <slot />
+    <div class="content">
+      <slot />
+    </div>
+    <div class="btnRemove">
+      <BtnRemove />
+    </div>
   </div>
 </div>

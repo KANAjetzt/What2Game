@@ -1,46 +1,71 @@
 <script>
+  import { onMount } from "svelte";
   import { appStore } from "../stores.js";
+  import { fade } from "svelte/transition";
 
-  import GameCard from "../components/GameCard.svelte";
   import Carousel from "@beyonk/svelte-carousel";
+  import GameCard from "../components/GameCard.svelte";
 
-  let clickedGame = $appStore.sameGames[$appStore.clickedGameIndex];
+  const clickedGame = $appStore.sameGames[$appStore.clickedGameIndex];
+  const screenshots = clickedGame.screenshots.map(
+    screenshot => screenshot.path_thumbnail
+  );
+
+  let currentScreenshotIndex = 0;
+
+  const cycleScreenshots = time => {
+    setInterval(() => {
+      currentScreenshotIndex =
+        (currentScreenshotIndex + 1) % screenshots.length;
+    }, time * 1000);
+  };
+
+  onMount(() => {
+    cycleScreenshots(2);
+  });
 
   console.log(clickedGame);
-  console.log();
 </script>
 
 <style>
   .screenshots {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 2rem;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    position: relative;
+    width: 100%;
   }
 
   .gameImg {
+    /* position: absolute; */
     width: 100%;
-    height: auto;
+    height: 20rem;
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+    object-fit: cover;
   }
 </style>
 
 <GameCard game={clickedGame} />
 
 <div class="screenshots">
-  {#each clickedGame.screenshots as screenshot, index}
+  {#each [screenshots[currentScreenshotIndex]] as screenshot, index (currentScreenshotIndex)}
     <img
+      transition:fade
       class="gameImg"
-      src={screenshot.path_thumbnail}
-      alt={`Screenshot ${index} of ${clickedGame.name}`} />
+      src={screenshot}
+      alt={`Screenshot  of ${clickedGame.name}`} />
   {/each}
 </div>
 
-<!-- <Carousel autoplay={1000 * 1} perPage={1}>
-  {#each clickedGame.screenshots as screenshot, index}
-    <div class="slide-content">
-      <img
-        class="gameImg"
-        src={screenshot.path_thumbnail}
-        alt={`Screenshot ${index} of ${clickedGame.name}`} />
-    </div>
+<div class="description">
+  <p>{clickedGame.short_description}</p>
+</div>
+
+<ul>
+  {#each clickedGame.categories as categorie}
+    <li>
+      <p>{categorie.description}</p>
+    </li>
   {/each}
-</Carousel> -->
+</ul>
