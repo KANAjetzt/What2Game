@@ -1,6 +1,7 @@
 <script>
   import { appStore } from "../stores.js";
   import { onMount } from "svelte";
+  import { scale } from "svelte/transition";
 
   import BtnRemove from "../components/BtnRemove.svelte";
 
@@ -53,8 +54,9 @@
 
 <div
   class="backdrop"
-  on:click={() => {
-    console.log('clicked');
+  transition:scale={{ duration: 200, opacity: 1, start: 0 }}
+  on:click|self={() => {
+    $appStore.modalIsOpen = false;
   }}>
   <div
     class="modal"
@@ -63,7 +65,10 @@
       <slot />
     </div>
     <div class="btnRemove">
-      <BtnRemove />
+      <BtnRemove
+        on:removebtnclick={() => {
+          $appStore.modalIsOpen = false;
+        }} />
     </div>
   </div>
 </div>
