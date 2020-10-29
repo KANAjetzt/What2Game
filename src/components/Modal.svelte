@@ -58,7 +58,7 @@
   }}>
   <div
     class="modal"
-    style={backgroundImage ? `background-image:url(${backgroundImage})` : ''}>
+    style={backgroundImage ? `background-image:linear-gradient(to right bottom, rgb(15 38 30), rgb(93 166 123 / 38%)), url(${backgroundImage})` : ''}>
     <div class="content">
       <slot />
     </div>

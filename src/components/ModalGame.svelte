@@ -5,6 +5,7 @@
 
   import Carousel from "@beyonk/svelte-carousel";
   import GameCard from "../components/GameCard.svelte";
+  import CategorieCard from "../components/CategorieCard.svelte";
 
   const clickedGame = $appStore.sameGames[$appStore.clickedGameIndex];
   const screenshots = clickedGame.screenshots.map(
@@ -44,6 +45,13 @@
     grid-column: 1 / 2;
     object-fit: cover;
   }
+
+  .categorieList {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 0;
+  }
 </style>
 
 <GameCard game={clickedGame} />
@@ -62,10 +70,8 @@
   <p>{clickedGame.short_description}</p>
 </div>
 
-<ul>
+<ul class="categorieList">
   {#each clickedGame.categories as categorie}
-    <li>
-      <p>{categorie.description}</p>
-    </li>
+    <CategorieCard {categorie} />
   {/each}
 </ul>
