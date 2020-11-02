@@ -24,8 +24,6 @@
   onMount(() => {
     cycleScreenshots(2);
   });
-
-  console.log(clickedGame);
 </script>
 
 <style>
