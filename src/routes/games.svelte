@@ -17,8 +17,7 @@
   }
 </style>
 
-{#if $appStore.clickedGameIndex && $appStore.modalIsOpen}
-
+{#if $appStore.clickedGameIndex >= 0 && $appStore.modalIsOpen}
   <Modal
     backgroundImage={$appStore.sameGames[$appStore.clickedGameIndex].background}>
     <ModalGame />
