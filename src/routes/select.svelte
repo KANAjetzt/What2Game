@@ -303,7 +303,9 @@
       </div>
 
       <div class="btnCTA">
-        <Button on:click={handleWhat2Game}>What2Game</Button>
+        <a href="/games">
+          <Button on:click={handleWhat2Game}>What2Game</Button>
+        </a>
       </div>
 
     </section>
