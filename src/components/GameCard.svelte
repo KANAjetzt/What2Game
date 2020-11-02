@@ -1,6 +1,5 @@
 <script>
   import { appStore } from "../stores";
-  import { fly } from "svelte/transition";
 
   export let game;
   export let index;
@@ -66,7 +65,6 @@
 
 <div
   class="game"
-  transition:fly|local={{ duration: 1000, x: -200 }}
   on:click={() => {
     $appStore.clickedGameIndex = index;
     $appStore.modalIsOpen = true;

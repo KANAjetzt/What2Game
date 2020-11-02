@@ -1,7 +1,7 @@
 <script>
   import { appStore } from "../stores.js";
   import { onMount } from "svelte";
-  import { scale } from "svelte/transition";
+  import { fade, scale } from "svelte/transition";
 
   import BtnRemove from "../components/BtnRemove.svelte";
 
@@ -54,14 +54,18 @@
 
 <div
   class="backdrop"
-  transition:scale={{ duration: 200, opacity: 1, start: 0 }}
+  in:fade|local={{ duration: 200 }}
+  out:fade|local={{ delay: 200, duration: 200 }}
   on:click|self={() => {
     $appStore.modalIsOpen = false;
   }}>
   <div
     class="modal"
     style={backgroundImage ? `background-image:linear-gradient(to right bottom, rgb(15 38 30), rgb(93 166 123 / 38%)), url(${backgroundImage})` : ''}>
-    <div class="content">
+    <div
+      in:scale|local={{ delay: 400, duration: 200 }}
+      out:scale|local={{ duration: 200 }}
+      class="content">
       <slot />
     </div>
     <div class="btnRemove">
