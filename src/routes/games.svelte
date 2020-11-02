@@ -4,6 +4,7 @@
   import { fly, crossfade } from "svelte/transition";
   import { flip } from "svelte/animate";
 
+  import PageTransition from "../components/PageTransition.svelte";
   import Modal from "../components/Modal.svelte";
   import GameCard from "../components/GameCard.svelte";
   import ModalGame from "../components/ModalGame.svelte";
@@ -37,21 +38,25 @@
   }
 </style>
 
-{#if $appStore.clickedGameIndex >= 0 && $appStore.modalIsOpen}
-  <Modal
-    backgroundImage={$appStore.sameGames[$appStore.clickedGameIndex].background}>
-    <ModalGame />
-  </Modal>
-{/if}
+<PageTransition>
 
-<section class="games">
-  {#each $appStore.sameGames as game, index (index)}
-    <div
-      class="gameCard"
-      in:receive={{ key: index }}
-      out:send={{ key: index }}
-      animate:flip>
-      <GameCard {game} {index} />
-    </div>
-  {/each}
-</section>
+  {#if $appStore.clickedGameIndex >= 0 && $appStore.modalIsOpen}
+    <Modal
+      backgroundImage={$appStore.sameGames[$appStore.clickedGameIndex].background}>
+      <ModalGame />
+    </Modal>
+  {/if}
+
+  <section class="games">
+    {#each $appStore.sameGames as game, index (index)}
+      <div
+        class="gameCard"
+        in:receive={{ key: index }}
+        out:send={{ key: index }}
+        animate:flip>
+        <GameCard {game} {index} />
+      </div>
+    {/each}
+  </section>
+
+</PageTransition>

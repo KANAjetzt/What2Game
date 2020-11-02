@@ -6,6 +6,7 @@
     getLocalStorage,
     saveLocalStorage
   } from "../utils/localStorageHandler";
+  import PageTransition from "../components/PageTransition.svelte";
   import Button from "../components/Button.svelte";
   import TextInput from "../components/TextInput.svelte";
 
@@ -92,35 +93,39 @@
   }
 </style>
 
-<div class="background">
-  <div class="grid">
-    <div class="info">
-      <h2>Find Games to play together!</h2>
-      <p>Enter your Steam ID or Login through Steam to get started.</p>
-    </div>
+<PageTransition>
 
-    <div class="login">
-
-      <TextInput />
-
-      <div class="steamBtn">
-        <a href="/auth/login" on:click={handleSteamAuth}>
-          <img src="/sits_02.png" alt="steam login btn" />
-        </a>
+  <div class="background">
+    <div class="grid">
+      <div class="info">
+        <h2>Find Games to play together!</h2>
+        <p>Enter your Steam ID or Login through Steam to get started.</p>
       </div>
-    </div>
 
-    {#if $appStore.user.steamId}
-      <div class="cta" transition:fly|local={{ y: 50, duration: 200 }}>
-        <a href="/select">
-          <Button
-            on:click={() => {
-              saveLocalStorage($appStore, 'appStore');
-            }}>
-            Continue
-          </Button>
-        </a>
+      <div class="login">
+
+        <TextInput />
+
+        <div class="steamBtn">
+          <a href="/auth/login" on:click={handleSteamAuth}>
+            <img src="/sits_02.png" alt="steam login btn" />
+          </a>
+        </div>
       </div>
-    {/if}
+
+      {#if $appStore.user.steamId}
+        <div class="cta" transition:fly|local={{ y: 50, duration: 200 }}>
+          <a href="/select">
+            <Button
+              on:click={() => {
+                saveLocalStorage($appStore, 'appStore');
+              }}>
+              Continue
+            </Button>
+          </a>
+        </div>
+      {/if}
+    </div>
   </div>
-</div>
+
+</PageTransition>

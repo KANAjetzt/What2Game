@@ -12,6 +12,7 @@
   } from "../utils/localStorageHandler";
   import { removeMessage, addMessage } from "../utils/messageHandler";
   import { fetchGames } from "../components/FetchGames.svelte";
+  import PageTranstion from "../components/PageTransition.svelte";
   import FriendCard from "../components/FriendCard.svelte";
   import Button from "../components/Button.svelte";
   import SelectedFriendsList from "../components/SelectedFriendsList.svelte";
@@ -205,6 +206,7 @@
   };
 
   const handleWhat2Game = async e => {
+    if ($appStore.sameGames[0]) return;
     const userGames = await getGamesOfUser($appStore.user.steamId);
     $appStore.user.games = userGames;
 
@@ -266,49 +268,52 @@
   <title>Friend Selection</title>
 </svelte:head>
 
-<div class="select">
+<PageTranstion>
 
-  <section class="top">
+  <div class="select">
 
-    <div class="info">
-      <h3>Select Friends you want to game with!</h3>
-      <p class="infoText">You can select up to 8 friends.</p>
-    </div>
+    <section class="top">
 
-  </section>
-
-  {#await $appStore.friends}
-    <Loader style="fullPageCentered" />
-  {:then friends}
-
-    <section class="friendsList">
-
-      {#each friends as friend, index}
-        <input
-          id={`friend-${index}`}
-          class="inputFriend"
-          type="checkbox"
-          on:change={handleSelectedFriend(friend)} />
-        <label class="labelFriend" for={`friend-${index}`}>
-          <FriendCard {friend} />
-        </label>
-      {/each}
-
-    </section>
-
-    <section class="bottom">
-
-      <div class="selectedFriendsList">
-        <SelectedFriendsList />
-      </div>
-
-      <div class="btnCTA">
-        <a href="/games">
-          <Button on:click={handleWhat2Game}>What2Game</Button>
-        </a>
+      <div class="info">
+        <h3>Select Friends you want to game with!</h3>
+        <p class="infoText">You can select up to 8 friends.</p>
       </div>
 
     </section>
-  {/await}
 
-</div>
+    {#await $appStore.friends}
+      <Loader style="fullPageCentered" />
+    {:then friends}
+
+      <section class="friendsList">
+
+        {#each friends as friend, index}
+          <input
+            id={`friend-${index}`}
+            class="inputFriend"
+            type="checkbox"
+            on:change={handleSelectedFriend(friend)} />
+          <label class="labelFriend" for={`friend-${index}`}>
+            <FriendCard {friend} />
+          </label>
+        {/each}
+
+      </section>
+
+      <section class="bottom">
+
+        <div class="selectedFriendsList">
+          <SelectedFriendsList />
+        </div>
+
+        <div class="btnCTA">
+          <a href="/games">
+            <Button on:click={handleWhat2Game}>What2Game</Button>
+          </a>
+        </div>
+
+      </section>
+    {/await}
+
+  </div>
+</PageTranstion>
