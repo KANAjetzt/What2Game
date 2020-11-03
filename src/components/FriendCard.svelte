@@ -48,6 +48,18 @@
       )} years ago`;
     }
   };
+
+  const handleCardStyling = () => {
+    let classes = ["friend"];
+    // 1) Check if friend has error state
+    if (friend.error) {
+      classes = [...classes, "friend--error"];
+    } else if (friend.selected) {
+      classes = [...classes, "friend--selected"];
+    }
+
+    return classes.join(" ");
+  };
 </script>
 
 <style>
@@ -61,6 +73,11 @@
 
   .friend--selected {
     background-color: rgba(15, 38, 30, 0.5);
+    box-shadow: 0 0 5px rgb(0 0 0 / 85%);
+  }
+
+  .friend--error {
+    background-color: rgba(179, 0, 0, 0.5);
     box-shadow: 0 0 5px rgb(0 0 0 / 85%);
   }
 
@@ -88,10 +105,21 @@
     font-weight: 300;
     opacity: 0.8;
   }
+
+  .errorMessage {
+    color: rgba(238, 238, 238, 0.95);
+    grid-column: span 2;
+  }
+
+  .errorMessage a {
+    font-size: 1.4rem;
+    color: rgba(93, 166, 123, 0.98);
+    text-decoration: none;
+  }
 </style>
 
 <div
-  class={`friend ${friend.selected ? 'friend--selected' : ''}`}
+  class={friend.selected || friend.error ? handleCardStyling() : 'friend'}
   transition:fly|local={{ duration: 200, x: -200 }}>
   <div class="avatar">
     <FriendImg
@@ -102,4 +130,12 @@
     <p class="name">{friend.personaname}</p>
     <p class="lastLogOff">{handleLastLogOff(friend)}</p>
   </div>
+  {#if friend.error}
+    <div class="errorMessage">
+      <p>Make sure "Profile" and "Game details" are both set to "Public".</p>
+      <a href="https://steamcommunity.com/my/edit/settings">
+        Steam Privacy Settings
+      </a>
+    </div>
+  {/if}
 </div>

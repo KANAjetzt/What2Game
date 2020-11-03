@@ -30,11 +30,13 @@
     width: 90vw;
     margin: 0;
     margin-top: 5rem;
+    background-color: rgba(179, 0, 0, 0.815);
     z-index: 9999;
   }
 
   .toasti--error {
     background-color: rgba(179, 0, 0, 0.815);
+    color: rgba(238, 238, 238, 0.95);
   }
 
   .toasti--info {
@@ -42,7 +44,7 @@
   }
 
   :global(.toasti svg) {
-    padding: 2rem 0 2rem 2rem;
+    padding-left: 2rem;
   }
 
   .message {
@@ -81,27 +83,23 @@
   }
 </style>
 
-{#if $appStore.messages[0]}
-  <div
-    class={`toasti toasti--${message.type}`}
-    transition:fly|local={{ x: -150, duration: 200 }}
-    on:introend={() => {
-      const timer = document.querySelector('.timer');
-      const timerBoundingClient = timer.getBoundingClientRect();
-      timerWidth = timerBoundingClient.width;
-      document.documentElement.style.setProperty('--timerWidth', `-${timerWidth}px`);
-      timer.classList.add('timer__shrinking');
-    }}>
+<div
+  class={`toasti toasti--${message.type}`}
+  transition:fly={{ x: -150, duration: 200 }}
+  on:introend={() => {
+    const timer = document.querySelector('.timer');
+    const timerBoundingClient = timer.getBoundingClientRect();
+    timerWidth = timerBoundingClient.width;
+    document.documentElement.style.setProperty('--timerWidth', `-${timerWidth}px`);
+    timer.classList.add('timer__shrinking');
+  }}>
 
-    {#if message.type === 'error'}
-      <ErrorIcon width="30px" height="30px" fill="#fff" />
-    {:else if message.type === 'info'}
-      <InfoIcon width="30px" height="30px" fill="#fff" />
-    {/if}
+  {#if message.type === 'error'}
+    <ErrorIcon width="30px" height="30px" fill="#fff" />
+  {:else if message.type === 'info'}
+    <InfoIcon width="30px" height="30px" fill="#fff" />
+  {/if}
 
-    <p class="message">{message.message}</p>
-    <div
-      class="timer"
-      style="animation-duration: {message.timeout * 1000}ms;" />
-  </div>
-{/if}
+  <p class="message">{message.message}</p>
+  <div class="timer" style="animation-duration: {message.timeout * 1000}ms;" />
+</div>

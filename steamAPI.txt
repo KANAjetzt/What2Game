@@ -27,3 +27,6 @@ Blackcat
 
 "ZipfelKuh_save"
 76561198254442485
+
+Privacy Settings:
+https://steamcommunity.com/my/edit/settings

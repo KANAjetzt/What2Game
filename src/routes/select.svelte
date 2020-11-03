@@ -177,30 +177,30 @@
       return;
     }
 
-    // 2) Mark friend as selected
-    $appStore.friends[appStoreIndex].selected = true;
-
-    // 3) Find all Games of this friend
+    // 2) Find all Games of this friend
     const friendGames = await getGamesOfUser(friend.steamid);
 
-    // 4) Check if we can get friends games
+    // 3) Check if we can get friends games
     if (!friendGames) {
-      console.error("error");
-      const wait = addMessage(
+      $appStore.messages = addMessage(
         $appStore.messages,
-        "Error",
+        "error",
         "privacyFriendSelect",
         "The Games of this person are not public!"
       );
 
-      console.log(wait);
+      // Mark friends as error
+      $appStore.friends[appStoreIndex].error = true;
     } else {
       $appStore.messages = removeMessage(
         $appStore.messages,
         "privacyFriendSelect"
       );
 
-      // 4) add them to the friend in the appStore
+      // Mark friend as selected
+      $appStore.friends[appStoreIndex].selected = true;
+
+      // Add them to the friend in the appStore
       $appStore.friends[appStoreIndex].games = friendGames;
     }
   };
