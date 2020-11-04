@@ -108,6 +108,17 @@
 
         const gameInfo = (await res.json()).data.gameInfo[appId].data;
 
+        // check if game has important game categories
+        if (
+          gameInfo.categories.filter(categorie =>
+            $appStore.importantGameCategorieIds.includes(categorie.id)
+          ).length > 0
+        ) {
+          gameInfo.importantCategorie = true;
+        } else {
+          gameInfo.importantCategorie = false;
+        }
+
         // save game Info in appStore
         if (gameInfo) $appStore.sameGames = [...$appStore.sameGames, gameInfo];
       });

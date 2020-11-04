@@ -1,11 +1,11 @@
 <script>
+  import { appStore } from "../stores.js";
+
   export let categorie;
   let isImportant = false;
-  const importantCategorieIds = [1, 9, 38];
 
   // check if categorie is important (coop / multiplayer)
-
-  if (importantCategorieIds.includes(categorie.id)) {
+  if ($appStore.importantGameCategorieIds.includes(categorie.id)) {
     isImportant = true;
   }
 </script>
