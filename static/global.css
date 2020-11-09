@@ -20,7 +20,10 @@
   -webkit-text-size-adjust: 100%; /* 2 */
   font-family: Montserrat;
 
-  --colorFontMain: #fcfcfc;
+  --colorFontMain: #eee;
+  --primaryColor: #5da67c;
+  --primaryColorDark: rgba(15, 38, 30, 0.5);
+  --errorColor: rgba(179, 0, 0, 0.5);
 }
 
 /* Sections

@@ -9,9 +9,9 @@
     cursor: pointer;
     padding: 1.5rem 10rem;
     display: inline-block;
-    color: #eee;
-    background-color: #5da67c;
-    border: 4px solid #5da67c;
+    color: var(--colorFontMain);
+    background-color: var(--primaryColor);
+    border: 4px solid var(--primaryColor);
     font-size: 1.2rem;
     font-weight: 400;
     letter-spacing: 1px;
@@ -22,7 +22,7 @@
 
   .btn:hover {
     background: transparent;
-    color: #eee;
+    color: var(--colorFontMain);
   }
 
   .btn:active {

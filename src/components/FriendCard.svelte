@@ -72,12 +72,12 @@
   }
 
   .friend--selected {
-    background-color: rgba(15, 38, 30, 0.5);
+    background-color: var(--primaryColorDark);
     box-shadow: 0 0 5px rgb(0 0 0 / 85%);
   }
 
   .friend--error {
-    background-color: rgba(179, 0, 0, 0.5);
+    background-color: var(--errorColor);
     box-shadow: 0 0 5px rgb(0 0 0 / 85%);
   }
 

@@ -15,7 +15,7 @@
   .dash {
     width: 100%;
     height: 2px;
-    background-color: #5da67c;
+    background-color: var(--primaryColor);
   }
 
   .imgs {

@@ -19,7 +19,7 @@
     box-shadow: none;
     border-bottom: 3px solid #eee;
     background-color: transparent;
-    color: #eee;
+    color: var(--colorFontMain);
     font-size: 120%;
     outline: none;
     cursor: text;
@@ -62,7 +62,7 @@
     top: 10px;
     left: 10px;
     font-size: 120%;
-    color: #eee;
+    color: var(--colorFontMain);
     -webkit-transform-origin: 0 -150%;
     transform-origin: 0 -150%;
     -webkit-transition: -webkit-transform 300ms ease;

@@ -253,7 +253,7 @@
   }
 
   .infoText {
-    color: #5da67c;
+    color: var(--primaryColor);
   }
 
   .inputFriend {

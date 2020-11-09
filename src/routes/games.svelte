@@ -11,7 +11,7 @@
   import Modal from "../components/Modal.svelte";
   import GameCard from "../components/GameCard.svelte";
   import ModalGame from "../components/ModalGame.svelte";
-  import FilterBtn from "../components/BtnFilter.svelte";
+  import SettingsBtn from "../components/BtnSettings.svelte";
 
   let sortedGamess = $sortedGames;
 
@@ -46,14 +46,14 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 2rem;
-    color: #eee;
+    color: var(--colorFontMain);
     padding: 2rem;
   }
 </style>
 
 <PageTransition>
   <div class="filterBtn">
-    <FilterBtn />
+    <SettingsBtn />
   </div>
   {#if $appStore.clickedGameIndex >= 0 && $appStore.modalIsOpen}
     <Modal
