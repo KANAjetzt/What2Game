@@ -11,7 +11,13 @@
   export let width = 25;
   export let height = 25;
 
-  let isSettingsOpen = false;
+  let btn = true,
+    settings;
+
+  // https://stackoverflow.com/questions/59882179/svelte-transition-between-two-elements-jumps
+  const change = () => {
+    btn ? (btn = !btn) : settings ? (settings = !settings) : null;
+  };
 
   const dispatch = createEventDispatcher();
 
@@ -19,7 +25,7 @@
   const handleFilterBtn = e => {
     e.preventDefault();
 
-    isSettingsOpen = !isSettingsOpen;
+    change();
 
     dispatch("filterbtnclick");
   };
@@ -46,9 +52,10 @@
   }
 </style>
 
-{#if !isSettingsOpen}
+{#if btn}
   <button
-    out:fly|local={{ duration: 200, x: 200 }}
+    transition:fly|local={{ duration: 150, x: 200 }}
+    on:outroend={() => (settings = true)}
     type="button"
     class="filterBtn"
     on:click={e => handleFilterBtn(e)}
@@ -57,8 +64,11 @@
   </button>
 {/if}
 
-{#if isSettingsOpen}
-  <div class="settings" in:fly|local={{ delay: 200, duration: 200, x: 200 }}>
+{#if settings}
+  <div
+    class="settings"
+    transition:fly|local={{ duration: 150, x: 200 }}
+    on:outroend={() => (btn = true)}>
     >
     <Settings />
     <div class="btnRemove">
@@ -66,7 +76,7 @@
         width={20}
         height={20}
         on:removebtnclick={() => {
-          isSettingsOpen = !isSettingsOpen;
+          change();
         }} />
     </div>
   </div>
