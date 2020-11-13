@@ -1,4 +1,6 @@
 <script>
+  import { appStore } from "../stores.js";
+
   let checked = false;
 
   const root = document.documentElement.style;
@@ -140,7 +142,7 @@
         id="showSinglePlayerGames"
         bind:checked
         on:change={() => {
-          console.log(checked);
+          $appStore.showSinglePlayerGames = !checked;
         }} />
       <div class="knobs" />
       <div class="layer" />

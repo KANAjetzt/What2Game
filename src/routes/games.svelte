@@ -2,7 +2,7 @@
   // TODO: - sort by Multiplayer or not
   // TODO: - Highlite Multiplayer games with box-shadow
 
-  import { appStore, sortedGames } from "../stores";
+  import { appStore, noSinglePlayerGames } from "../stores";
   import { quintOut } from "svelte/easing";
   import { fly, crossfade } from "svelte/transition";
   import { flip } from "svelte/animate";
@@ -12,8 +12,6 @@
   import GameCard from "../components/GameCard.svelte";
   import ModalGame from "../components/ModalGame.svelte";
   import SettingsBtn from "../components/BtnSettings.svelte";
-
-  let sortedGamess = $sortedGames;
 
   const [send, receive] = crossfade({
     duration: d => Math.sqrt(d * 200),
@@ -63,7 +61,7 @@
   {/if}
 
   <section class="games">
-    {#each $sortedGames as game, index (index)}
+    {#each $appStore.showSinglePlayerGames ? $appStore.sameGames : $noSinglePlayerGames as game, index (game.steam_appid)}
       <div
         class="gameCard"
         in:receive={{ key: index }}

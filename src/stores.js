@@ -11,6 +11,7 @@ export const appStore = writable({
   importantGameCategorieIds: [1, 9, 38],
   clickedGameIndex: undefined,
   modalIsOpen: false,
+  showSinglePlayerGames: true,
 });
 
 // Sort Friends ABC
@@ -32,24 +33,7 @@ export const selectedFriends = derived(appStore, ($appStore) => {
   return $appStore.selectedFriends = friends.filter(friend => friend.selected)
 });
 
-export const sortedGames = derived(appStore, $appStore => {
-
-  // 1) get same games from appStore
+export const noSinglePlayerGames = derived(appStore, $appStore => {
   let {sameGames} = $appStore
-
-  return sameGames.sort((a, b) => {
-    if(a){
-      a = a.categories.filter(categorie => $appStore.importantGameCategorieIds.includes(categorie.id))
-    if(a.length === 0){ a = false} else {
-      a = true
-    }
-    } else {
-      b = b.categories.filter(categorie => $appStore.importantGameCategorieIds.includes(categorie.id))
-    if(b.length === 0){ b = false} else {
-      b = true
-    }
-    }
-    
-
-    return (a === b) ? 0 : a ? -1 : 1})
+  return sameGames.filter(game => game.importantCategorie)
 })
