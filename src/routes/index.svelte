@@ -56,15 +56,14 @@
   .grid {
     display: grid;
     grid-template-rows: 25% min-content min-content 1fr;
+    justify-content: center;
     min-height: 100vh;
     backdrop-filter: blur(8px);
   }
 
   .info {
     grid-row: 2 / 3;
-    padding: 0 1rem;
     max-width: 75vw;
-    margin: auto;
   }
 
   .login {

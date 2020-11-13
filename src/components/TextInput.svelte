@@ -3,8 +3,12 @@
 </script>
 
 <style>
+  .SteamIdInput {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
   .steamId {
-    margin: auto;
     margin-top: 2rem;
     font-size: 1.5rem;
     font-family: inherit;
@@ -14,7 +18,6 @@
     background-color: rbga(#fff, 0.5);
     border: none;
     border-bottom: 3px solid transparent;
-    width: 75%;
     display: block;
     -webkit-transition: all 0.3s;
     transition: all 0.3s;
@@ -41,7 +44,6 @@
     color: #fff;
     font-size: 1.2rem;
     font-weight: 700;
-    margin-left: 6.2rem;
     margin-top: 0.7rem;
     display: block;
     -webkit-transition: all 0.3s;
@@ -49,13 +51,15 @@
   }
 </style>
 
-<input
-  class="steamId"
-  id="steamId"
-  name="steamId"
-  type="text"
-  placeholder="Steam ID"
-  autocomplete="off"
-  required
-  bind:value={$appStore.user.steamId} />
-<label>Steam ID</label>
+<div class="SteamIdInput">
+  <input
+    class="steamId"
+    id="steamId"
+    name="steamId"
+    type="text"
+    placeholder="Steam ID"
+    autocomplete="off"
+    required
+    bind:value={$appStore.user.steamId} />
+  <label>Steam ID</label>
+</div>
