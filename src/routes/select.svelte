@@ -1,5 +1,5 @@
 <script>
-  // TODO: - on click check if games can be fetched
+  // TODO: - on click show loader until games are fetched
 
   import { fly } from "svelte/transition";
 
@@ -258,6 +258,11 @@
 
   .inputFriend {
     display: none;
+  }
+
+  .friendsList {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   }
 
   .labelFriend {
