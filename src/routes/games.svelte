@@ -1,6 +1,6 @@
 <script>
-  // TODO: - sort by Multiplayer or not
-  // TODO: - Highlite Multiplayer games with box-shadow
+  // TODO: - Settings Btn - mount when all games are loaded
+  // TODO: - Fix flashing when all games are loaded
 
   import { appStore, noSinglePlayerGames } from "../stores";
   import { quintOut } from "svelte/easing";
