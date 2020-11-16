@@ -4,7 +4,8 @@
   import { appStore } from "../stores";
   import {
     getLocalStorage,
-    saveLocalStorage
+    saveLocalStorage,
+    deleteLocalStorage
   } from "../utils/localStorageHandler";
   import PageTransition from "../components/PageTransition.svelte";
   import Button from "../components/Button.svelte";
@@ -12,6 +13,20 @@
 
   // set current page
   $appStore.currentPage = "index";
+
+  const handleLocalStorage = () => {
+    // Steam id in $appStore and LS are the same --> skip
+    if (
+      getLocalStorage("appStore") &&
+      getLocalStorage("appStore").user.steamId === $appStore.user.steamId
+    ) {
+      return;
+      // else clear LS and save
+    } else {
+      deleteLocalStorage("appStore");
+      saveLocalStorage($appStore, "appStore");
+    }
+  };
 
   const handleSteamAuth = () => {
     console.log("do stuff");
@@ -115,12 +130,7 @@
       {#if $appStore.user.steamId}
         <div class="cta" transition:fly|local={{ y: 50, duration: 200 }}>
           <a href="/select">
-            <Button
-              on:click={() => {
-                saveLocalStorage($appStore, 'appStore');
-              }}>
-              Continue
-            </Button>
+            <Button on:click={handleLocalStorage}>Continue</Button>
           </a>
         </div>
       {/if}
