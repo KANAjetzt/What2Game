@@ -19,6 +19,7 @@
 <style>
   main {
     min-height: 100vh;
+    overflow-y: hidden;
   }
 </style>
 
