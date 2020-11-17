@@ -11,7 +11,6 @@
     saveLocalStorage
   } from "../utils/localStorageHandler";
   import { removeMessage, addMessage } from "../utils/messageHandler";
-  import { fetchGames } from "../components/FetchGames.svelte";
   import PageTranstion from "../components/PageTransition.svelte";
   import FriendCard from "../components/FriendCard.svelte";
   import Button from "../components/Button.svelte";

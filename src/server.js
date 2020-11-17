@@ -1,3 +1,4 @@
+require('dotenv').config()
 import sirv from "sirv";
 import express from "express";
 import compression from "compression";
@@ -10,6 +11,19 @@ import SteamStrategy from "passport-steam";
 
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === "development";
+
+var os = require('os');
+
+var interfaces = os.networkInterfaces();
+var addresses = [];
+for (var k in interfaces) {
+    for (var k2 in interfaces[k]) {
+        var address = interfaces[k][k2];
+        if (address.family === 'IPv4' && !address.internal) {
+            addresses.push(address.address);
+        }
+    }
+}
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -29,9 +43,9 @@ passport.deserializeUser(function (obj, done) {
 passport.use(
   new SteamStrategy(
     {
-      returnURL: "http://localhost:3000/auth/steam/return",
-      realm: "http://localhost:3000/",
-      apiKey: "2F15898C280E0CD2F2D007CEB140476E",
+      returnURL: `http://${addresses[0]}:${PORT}/auth/steam/return`,
+      realm: `http://${addresses[0]}:${PORT}/`,
+      apiKey: `${process.env.STEAM_API_KEY}`,
     },
     function (identifier, profile, done) {
       // User.findByOpenID({ openId: identifier }, function (err, user) {
@@ -90,9 +104,6 @@ express() // You can also use Express
     "/auth/steam/return",
     passport.authenticate("steam", { failureRedirect: "/" }),
     (req, res) => {
-      console.log("-------------------------");
-      console.log(res.req.user.id);
-      console.log("-------------------------");
       const steamId = res.req.user.id;
 
       res.redirect(`/?steamID=${steamId}`);
@@ -109,7 +120,6 @@ express() // You can also use Express
   .get("/", (req, res, next) => {
     if (!req.query) return;
     const steamId = req.query;
-    console.log(steamId);
     next();
   })
 
