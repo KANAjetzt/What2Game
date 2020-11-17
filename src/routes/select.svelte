@@ -21,7 +21,6 @@
 
   $appStore.currentPage = "select";
 
-  let friendDataa;
   let sortedFriendss = $sortedFriends;
   let selectedFriendss = $selectedFriends;
 
@@ -47,33 +46,6 @@
       console.log(err);
     }
   };
-
-  if (process.browser) {
-    const lsFriendData = $appStore.friends;
-
-    if (lsFriendData[0]) {
-      $appStore.friends = lsFriendData;
-    } else {
-      // Check if SteamID is there
-      if (!$appStore.user.steamId) {
-        $appStore.messages = addMessage(
-          $appStore.messages,
-          "Error",
-          "steamIdFriendSelect",
-          "No Steam ID - pleas enter your Steam ID"
-        );
-      } else {
-        $appStore.messages = removeMessage(
-          $appStore.messages,
-          "steamIdFriendSelect"
-        );
-
-        $appStore.friends = getFriendsInfo($appStore.user.steamId).then(
-          data => ($appStore.friends = data)
-        );
-      }
-    }
-  }
 
   const getAppIdsFromFriends = FriendsArr => {
     const games = FriendsArr.map(friend => {
@@ -182,6 +154,7 @@
       $appStore.friends[appStoreIndex].selected === true ||
       $appStore.friends[appStoreIndex].selected === false
     ) {
+      // toggle selected property and return
       $appStore.friends[appStoreIndex].selected = !$appStore.friends[
         appStoreIndex
       ].selected;
@@ -213,31 +186,71 @@
 
       // Add them to the friend in the appStore
       $appStore.friends[appStoreIndex].games = friendGames;
+
+      // Save the new data to LS
+      saveLocalStorage($appStore, "appStore");
+
+      // Make shure we know that the selection has changed so we search for new games later
+      $appStore.selectedFriendsHaveChanged = true;
     }
   };
 
   const handleWhat2Game = async e => {
-    if ($appStore.sameGames[0]) return;
-    const userGames = await getGamesOfUser($appStore.user.steamId);
-    $appStore.user.games = userGames;
+    // same games as before
 
-    await getGamesOfFriends();
+    // --- search new games ---
+    // if no user games get them
+    if (!$appStore.user.games) {
+      $appStore.user.games = await getGamesOfUser($appStore.user.steamId);
+    }
+    // if selection of friends changed or no games we have no games jet --> get the games
+    if (!$appStore.sameGames[0] || $appStore.selectedFriendsHaveChanged) {
+      // make room for the new games
+      $appStore.sameGames = [];
 
-    const friendsAppIds = getAppIdsFromFriends($selectedFriends);
-    const userAppIds = getAppIdsFromFriends([$appStore.user]);
+      await getGamesOfFriends();
 
-    const appIds = [...friendsAppIds, ...userAppIds];
+      // find games all selected friends have
+      const friendsAppIds = getAppIdsFromFriends($selectedFriends);
+      const userAppIds = getAppIdsFromFriends([$appStore.user]);
 
-    const sameGames = getSameGames(appIds);
+      const appIds = [...friendsAppIds, ...userAppIds];
 
-    // get's gameInfo and saves same games in appStore
-    await getGameInfo(sameGames);
+      const sameGames = getSameGames(appIds);
 
-    saveLocalStorage($appStore, "appStore");
+      // get's gameInfo and saves same games in appStore
+      await getGameInfo(sameGames);
 
-    // similar behavior as an HTTP redirect
-    window.location.replace("/games");
+      saveLocalStorage($appStore, "appStore");
+    }
   };
+
+  if (process.browser) {
+    const lsFriendData = $appStore.friends;
+
+    if (lsFriendData[0]) {
+      $appStore.friends = lsFriendData;
+    } else {
+      // Check if SteamID is there
+      if (!$appStore.user.steamId) {
+        $appStore.messages = addMessage(
+          $appStore.messages,
+          "Error",
+          "steamIdFriendSelect",
+          "No Steam ID - pleas enter your Steam ID"
+        );
+      } else {
+        $appStore.messages = removeMessage(
+          $appStore.messages,
+          "steamIdFriendSelect"
+        );
+
+        $appStore.friends = getFriendsInfo($appStore.user.steamId).then(
+          data => ($appStore.friends = data)
+        );
+      }
+    }
+  }
 </script>
 
 <style>

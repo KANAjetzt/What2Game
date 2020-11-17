@@ -5,6 +5,7 @@ export const appStore = writable({
   friends: [],
   // removed that - So I don't have to maintain 2 redundant friend objects
   selectedFriends: [],
+  selectedFriendsHaveChanged: false,
   sameGames: [],
   messages: [],
   currentPage: [],
