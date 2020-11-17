@@ -8,7 +8,7 @@ export async function post(req, res, next) {
   // Do something with the data...
 
   const gameReq = await axios(
-    `http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=2F15898C280E0CD2F2D007CEB140476E&steamid=${steamId}&include_played_free_games=true&include_appinfo=true&format=json`
+    `http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${process.env.STEAM_API_KEY}&steamid=${steamId}&include_played_free_games=true&include_appinfo=true&format=json`
   );
 
   const games = gameReq.data;
