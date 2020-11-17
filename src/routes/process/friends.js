@@ -9,14 +9,14 @@ export async function post(req, res, next) {
 
   // Do something with the data...
   const gameReq = await axios(
-    `http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=2F15898C280E0CD2F2D007CEB140476E&steamid=${steamId}&relationship=friend`
+    `http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=${process.env.STEAM_API_KEY}&steamid=${steamId}&relationship=friend`
   );
 
   const friends = gameReq.data.friendslist.friends;
   const steamIds = friends.map((friend) => friend.steamid).join(",");
 
   const friendData = await axios(
-    `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=2F15898C280E0CD2F2D007CEB140476E&steamids=${steamIds}`
+    `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${process.env.STEAM_API_KEY}&steamids=${steamIds}`
   );
 
   const friendDataa = friendData.data.response.players;
