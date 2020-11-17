@@ -12,11 +12,11 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-
+    box-shadow: 2px 2px 2px rgba(15, 38, 30, 0.9);
     background-image: linear-gradient(
       155.22deg,
-      #0476d0 -3.82%,
-      #047dd9 104.08%
+      rgba(7, 13, 12, 0.9) -3.82%,
+      rgba(15, 38, 30, 0.9) 104.08%
     );
     border-radius: 100%;
     z-index: 20;

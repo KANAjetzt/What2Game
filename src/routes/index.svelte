@@ -4,10 +4,29 @@
   import { appStore } from "../stores";
   import {
     getLocalStorage,
-    saveLocalStorage
+    saveLocalStorage,
+    deleteLocalStorage
   } from "../utils/localStorageHandler";
+  import PageTransition from "../components/PageTransition.svelte";
   import Button from "../components/Button.svelte";
   import TextInput from "../components/TextInput.svelte";
+
+  // set current page
+  $appStore.currentPage = "index";
+
+  const handleLocalStorage = () => {
+    // Steam id in $appStore and LS are the same --> skip
+    if (
+      getLocalStorage("appStore") &&
+      getLocalStorage("appStore").user.steamId === $appStore.user.steamId
+    ) {
+      return;
+      // else clear LS and save
+    } else {
+      deleteLocalStorage("appStore");
+      saveLocalStorage($appStore, "appStore");
+    }
+  };
 
   const handleSteamAuth = () => {
     console.log("do stuff");
@@ -25,45 +44,97 @@
   };
 
   if (process.browser) {
-    if (!$appStore.user.steamId) {
-      const steamId = getSteamIdFromQueryString();
-      addSteamIdToInput(steamId);
+    let steamId = $appStore.user.steamId;
 
-      // Add SteamId to appStore
-      if (steamId) $appStore.user.steamId = steamId;
+    // Check for steamId in queryString
+    if (!steamId) {
+      steamId = getSteamIdFromQueryString();
+      if (steamId) {
+        addSteamIdToInput(steamId);
 
-      // Save Store to LocalStorage
-      saveLocalStorage($appStore, "appStore");
+        // Add SteamId to appStore
+        if (steamId) $appStore.user.steamId = steamId;
+
+        // Save Store to LocalStorage
+        saveLocalStorage($appStore, "appStore");
+      }
     }
   }
 </script>
 
 <style>
-  h2 {
-    margin-top: 2rem;
+  .background {
+    background-image: url("/Stars-medium.jpg");
+    background-size: cover;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-rows: 25% min-content min-content 1fr;
+    justify-content: center;
+    min-height: 100vh;
+    backdrop-filter: blur(8px);
+  }
+
+  .info {
+    grid-row: 2 / 3;
+    max-width: 75vw;
+  }
+
+  .login {
+    grid-row: 3 / 4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   .steamBtn {
-    margin-top: 1rem;
+    margin-top: 5rem;
+  }
+
+  .cta {
+    grid-row: 4 / 5;
+    align-self: end;
+    display: flex;
+    justify-content: center;
+    padding: 2rem 0;
+  }
+
+  h2 {
+    font-size: 4.5rem;
+  }
+  p {
+    margin-top: 2rem;
   }
 </style>
 
-<h2>Steam Login / SteamID</h2>
+<PageTransition>
 
-<div>
-  <form>
-    <TextInput />
-  </form>
-  <div class="steamBtn">
-    <a href="/auth/login" on:click={handleSteamAuth}>
-      <img src="/sits_02.png" alt="steam login btn" />
-    </a>
+  <div class="background">
+    <div class="grid">
+      <div class="info">
+        <h2>Find Games to play together!</h2>
+        <p>Enter your Steam ID or Login through Steam to get started.</p>
+      </div>
+
+      <div class="login">
+
+        <TextInput />
+
+        <div class="steamBtn">
+          <a href="/auth/login" on:click={handleSteamAuth}>
+            <img src="/sits_02.png" alt="steam login btn" />
+          </a>
+        </div>
+      </div>
+
+      {#if $appStore.user.steamId}
+        <div class="cta" transition:fly|local={{ y: 50, duration: 200 }}>
+          <a href="/select">
+            <Button on:click={handleLocalStorage}>Continue</Button>
+          </a>
+        </div>
+      {/if}
+    </div>
   </div>
-  <p>
-    Login via Steam or enter your SteamID, so you can select your friends in the
-    next step.
-  </p>
-</div>
 
-<a href="/select">
-  <Button>GO !</Button>
-</a>
+</PageTransition>

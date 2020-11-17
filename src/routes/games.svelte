@@ -1,29 +1,75 @@
 <script>
-  import { appStore } from "../stores";
-  import { fly } from "svelte/transition";
+  // TODO: - Settings Btn - mount when all games are loaded
+  // TODO: - Fix flashing when all games are loaded
+
+  import { appStore, noSinglePlayerGames } from "../stores";
+  import { quintOut } from "svelte/easing";
+  import { fly, crossfade } from "svelte/transition";
+  import { flip } from "svelte/animate";
+
+  import PageTransition from "../components/PageTransition.svelte";
+  import Modal from "../components/Modal.svelte";
+  import GameCard from "../components/GameCard.svelte";
+  import ModalGame from "../components/ModalGame.svelte";
+  import SettingsBtn from "../components/BtnSettings.svelte";
+
+  const [send, receive] = crossfade({
+    duration: d => Math.sqrt(d * 200),
+
+    fallback(node, params) {
+      const style = getComputedStyle(node);
+      const transform = style.transform === "none" ? "" : style.transform;
+
+      return {
+        duration: 600,
+        easing: quintOut,
+        css: t => `
+					transform: ${transform} scale(${t});
+					opacity: ${t}
+				`
+      };
+    }
+  });
 </script>
 
-{#each $appStore.sameGames as game (game.steam_appid)}
-  <div class="game" transition:fly={{ duration: 1000, x: -200 }}>
-    <h2>{game.name}</h2>
-    <img
-      class="gameImg"
-      src={game.header_image}
-      alt={`Header image of ${game.name}`} />
-    <ul class="categorieList">
-      {#each game.categories as categorie}
-        <li class="categorie">{categorie.description}</li>
-      {/each}
-    </ul>
-
-  </div>
-{/each}
-
 <style>
-.game {
-  padding: 1rem 0;
-}
-.gameImg {
-  width: 100vw;
-}
+  .filterBtn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 1000;
+  }
+
+  .games {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    color: var(--colorFontMain);
+    padding: 2rem;
+  }
 </style>
+
+<PageTransition>
+  <div class="filterBtn">
+    <SettingsBtn />
+  </div>
+  {#if $appStore.clickedGameIndex >= 0 && $appStore.modalIsOpen}
+    <Modal
+      backgroundImage={$appStore.sameGames[$appStore.clickedGameIndex].background}>
+      <ModalGame />
+    </Modal>
+  {/if}
+
+  <section class="games">
+    {#each $appStore.showSinglePlayerGames ? $appStore.sameGames : $noSinglePlayerGames as game, index (game.steam_appid)}
+      <div
+        class="gameCard"
+        in:receive={{ key: index }}
+        out:send={{ key: index }}
+        animate:flip>
+        <GameCard {game} {index} />
+      </div>
+    {/each}
+  </section>
+
+</PageTransition>

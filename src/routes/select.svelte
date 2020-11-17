@@ -1,22 +1,28 @@
 <script>
+  // TODO: - on click show loader until games are fetched
+
   import { fly } from "svelte/transition";
 
-  import { appStore, sortedFriends } from "../stores";
+  import { appStore, sortedFriends, selectedFriends } from "../stores";
   import asyncForEach from "../utils/asyncForEach";
   import findSimilar from "../utils/findSimilar";
   import {
     getLocalStorage,
     saveLocalStorage
   } from "../utils/localStorageHandler";
-  import { removeMessage, addMessage } from "../utils/errorHandler";
+  import { removeMessage, addMessage } from "../utils/messageHandler";
   import { fetchGames } from "../components/FetchGames.svelte";
-  import Checkbox from "../components/Checkbox.svelte";
+  import PageTranstion from "../components/PageTransition.svelte";
+  import FriendCard from "../components/FriendCard.svelte";
   import Button from "../components/Button.svelte";
+  import SelectedFriendsList from "../components/SelectedFriendsList.svelte";
   import Loader from "../components/Loader.svelte";
   import Message from "../components/Message.svelte";
 
-  let friendDataa;
+  $appStore.currentPage = "select";
+
   let sortedFriendss = $sortedFriends;
+  let selectedFriendss = $selectedFriends;
 
   const getFriendsInfo = async steamId => {
     try {
@@ -40,33 +46,6 @@
       console.log(err);
     }
   };
-
-  if (process.browser) {
-    const lsFriendData = getLocalStorage("appStore").friends;
-
-    if (lsFriendData[0]) {
-      $appStore.friends = lsFriendData;
-    } else {
-      // Check if SteamID is there
-      if (!$appStore.user.steamId) {
-        $appStore.messages = addMessage(
-          $appStore.messages,
-          "Error",
-          "steamIdFriendSelect",
-          "No Steam ID - pleas enter your Steam ID"
-        );
-      } else {
-        $appStore.messages = removeMessage(
-          $appStore.messages,
-          "steamIdFriendSelect"
-        );
-
-        $appStore.friends = getFriendsInfo($appStore.user.steamId).then(
-          data => ($appStore.friends = data)
-        );
-      }
-    }
-  }
 
   const getAppIdsFromFriends = FriendsArr => {
     const games = FriendsArr.map(friend => {
@@ -101,6 +80,17 @@
 
         const gameInfo = (await res.json()).data.gameInfo[appId].data;
 
+        // check if game has important game categories
+        if (
+          gameInfo.categories.filter(categorie =>
+            $appStore.importantGameCategorieIds.includes(categorie.id)
+          ).length > 0
+        ) {
+          gameInfo.importantCategorie = true;
+        } else {
+          gameInfo.importantCategorie = false;
+        }
+
         // save game Info in appStore
         if (gameInfo) $appStore.sameGames = [...$appStore.sameGames, gameInfo];
       });
@@ -109,8 +99,8 @@
     }
   };
 
-  const getGamesOfUser = async () => {
-    const data = { friendSteamId: $appStore.user.steamId };
+  const getGamesOfUser = async steamId => {
+    const data = { friendSteamId: steamId };
 
     // associated script = /src/routes/process/games.js
     const url = "/process/games";
@@ -124,9 +114,7 @@
       }
     });
 
-    const games = (await res.json()).data.games.response.games;
-
-    $appStore.user.games = games;
+    return (await res.json()).data.games.response.games;
   };
 
   const getGamesOfFriends = async () => {
@@ -156,52 +144,152 @@
     });
   };
 
-  const handleSelectedFriend = e => {
-    const friendIndex = e.detail;
+  const handleSelectedFriend = async friend => {
+    const appStoreIndex = $appStore.friends.findIndex(
+      f => f.steamid === friend.steamid
+    );
 
-    $appStore.selectedFriends = [
-      ...$appStore.selectedFriends,
-      $appStore.friends[friendIndex]
-    ];
+    // 1) Check if friend was allready selected
+    if (
+      $appStore.friends[appStoreIndex].selected === true ||
+      $appStore.friends[appStoreIndex].selected === false
+    ) {
+      // toggle selected property and return
+      $appStore.friends[appStoreIndex].selected = !$appStore.friends[
+        appStoreIndex
+      ].selected;
+      return;
+    }
+
+    // 2) Find all Games of this friend
+    const friendGames = await getGamesOfUser(friend.steamid);
+
+    // 3) Check if we can get friends games
+    if (!friendGames) {
+      $appStore.messages = addMessage(
+        $appStore.messages,
+        "error",
+        "privacyFriendSelect",
+        "The Games of this person are not public!"
+      );
+
+      // Mark friends as error
+      $appStore.friends[appStoreIndex].error = true;
+    } else {
+      $appStore.messages = removeMessage(
+        $appStore.messages,
+        "privacyFriendSelect"
+      );
+
+      // Mark friend as selected
+      $appStore.friends[appStoreIndex].selected = true;
+
+      // Add them to the friend in the appStore
+      $appStore.friends[appStoreIndex].games = friendGames;
+
+      // Save the new data to LS
+      saveLocalStorage($appStore, "appStore");
+
+      // Make shure we know that the selection has changed so we search for new games later
+      $appStore.selectedFriendsHaveChanged = true;
+    }
   };
 
   const handleWhat2Game = async e => {
-    await getGamesOfUser();
-    await getGamesOfFriends();
+    // same games as before
 
-    const friendsAppIds = getAppIdsFromFriends($appStore.selectedFriends);
-    const userAppIds = getAppIdsFromFriends([$appStore.user]);
+    // --- search new games ---
+    // if no user games get them
+    if (!$appStore.user.games) {
+      $appStore.user.games = await getGamesOfUser($appStore.user.steamId);
+    }
+    // if selection of friends changed or no games we have no games jet --> get the games
+    if (!$appStore.sameGames[0] || $appStore.selectedFriendsHaveChanged) {
+      // make room for the new games
+      $appStore.sameGames = [];
 
-    const appIds = [...friendsAppIds, ...userAppIds];
+      await getGamesOfFriends();
 
-    const sameGames = getSameGames(appIds);
+      // find games all selected friends have
+      const friendsAppIds = getAppIdsFromFriends($selectedFriends);
+      const userAppIds = getAppIdsFromFriends([$appStore.user]);
 
-    // get's gameInfo and saves same games in appStore
-    await getGameInfo(sameGames);
+      const appIds = [...friendsAppIds, ...userAppIds];
 
-    saveLocalStorage($appStore, "appStore");
+      const sameGames = getSameGames(appIds);
 
-    // similar behavior as an HTTP redirect
-    window.location.replace("/games");
+      // get's gameInfo and saves same games in appStore
+      await getGameInfo(sameGames);
+
+      saveLocalStorage($appStore, "appStore");
+    }
   };
+
+  if (process.browser) {
+    const lsFriendData = $appStore.friends;
+
+    if (lsFriendData[0]) {
+      $appStore.friends = lsFriendData;
+    } else {
+      // Check if SteamID is there
+      if (!$appStore.user.steamId) {
+        $appStore.messages = addMessage(
+          $appStore.messages,
+          "Error",
+          "steamIdFriendSelect",
+          "No Steam ID - pleas enter your Steam ID"
+        );
+      } else {
+        $appStore.messages = removeMessage(
+          $appStore.messages,
+          "steamIdFriendSelect"
+        );
+
+        $appStore.friends = getFriendsInfo($appStore.user.steamId).then(
+          data => ($appStore.friends = data)
+        );
+      }
+    }
+  }
 </script>
 
 <style>
-  .friend {
+  .select {
+    display: grid;
+    grid-template-rows: min-content 1fr min-content;
+    min-height: 100vh;
+  }
+
+  .info {
+    padding: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .infoText {
+    color: var(--primaryColor);
+  }
+
+  .inputFriend {
+    display: none;
+  }
+
+  .friendsList {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  }
+
+  .labelFriend {
+    display: block;
+  }
+
+  .selectedFriendsList {
+    margin-top: 5rem;
+  }
+
+  .btnCTA {
     display: flex;
-    align-items: center;
-    padding: 0.5rem 0;
-    box-shadow: 1px 4px 10px 0px rgba(0, 0, 0, 0.05);
-  }
-
-  .avatar {
-    width: 3rem;
-    height: auto;
-    margin-left: 3rem;
-  }
-
-  .name {
-    margin-left: 2rem;
+    justify-content: center;
+    padding: 4rem 2rem 2rem 2rem;
   }
 </style>
 
@@ -209,26 +297,52 @@
   <title>Friend Selection</title>
 </svelte:head>
 
-{#await $appStore.friends}
-  <Loader style="fullPageCentered" />
-{:then friends}
+<PageTranstion>
 
-  {#each friends as friend, index}
-    <div class="friend" transition:fly={{ duration: 200, x: -200 }}>
-      <Checkbox id={index} on:checked={handleSelectedFriend} />
-      <img
-        class="avatar"
-        src={friend.avatarfull}
-        alt={`Avatar image of ${friend.personaname}`}
-        loading="lazy"
-        width="50"
-        height="50" />
-      <p class="name">{friend.personaname}</p>
-    </div>
-  {/each}
+  <div class="select">
 
-  <Button on:click={handleWhat2Game}>What2Game</Button>
-  {#if !friendDataa && !$appStore.sameGames[0]}
-    <p>no Friends :(</p>
-  {/if}
-{/await}
+    <section class="top">
+
+      <div class="info">
+        <h3>Select Friends you want to game with!</h3>
+        <p class="infoText">You can select up to 8 friends.</p>
+      </div>
+
+    </section>
+
+    {#await $appStore.friends}
+      <Loader style="fullPageCentered" />
+    {:then friends}
+
+      <section class="friendsList">
+
+        {#each friends as friend, index}
+          <input
+            id={`friend-${index}`}
+            class="inputFriend"
+            type="checkbox"
+            on:change={handleSelectedFriend(friend)} />
+          <label class="labelFriend" for={`friend-${index}`}>
+            <FriendCard {friend} />
+          </label>
+        {/each}
+
+      </section>
+
+      <section class="bottom">
+
+        <div class="selectedFriendsList">
+          <SelectedFriendsList />
+        </div>
+
+        <div class="btnCTA">
+          <a href="/games">
+            <Button on:click={handleWhat2Game}>What2Game</Button>
+          </a>
+        </div>
+
+      </section>
+    {/await}
+
+  </div>
+</PageTranstion>

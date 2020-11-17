@@ -17,20 +17,9 @@
 </script>
 
 <style>
-  :global(body) {
-    background-color: #333;
-    color: #eee;
-  }
-
   main {
-    display: grid;
-    position: relative;
     min-height: 100vh;
-    max-width: 56em;
-    background-color: #333;
-    color: #eee;
-    margin: 0 auto;
-    box-sizing: border-box;
+    overflow-y: hidden;
   }
 </style>
 
@@ -42,7 +31,7 @@
   {/each}
 {/if}
 
-<Nav {segment} />
+<!-- <Nav {segment} /> -->
 <main>
   <slot />
 </main>

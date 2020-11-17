@@ -2,9 +2,10 @@
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
 
-  import { removeMessage, addMessage } from "../utils/errorHandler.js";
+  import { removeMessage, addMessage } from "../utils/messageHandler.js";
   import { appStore } from "../stores";
-  import ErrorIcon from "./icons/ExclamationMark.svelte";
+  import ErrorIcon from "./Icons/ExclamationMark.svelte";
+  import InfoIcon from "./Icons/Info.svelte";
 
   export let message;
   let timerWidth;
@@ -29,12 +30,21 @@
     width: 90vw;
     margin: 0;
     margin-top: 5rem;
-    z-index: 9999;
     background-color: rgba(179, 0, 0, 0.815);
+    z-index: 9999;
+  }
+
+  .toasti--error {
+    background-color: rgba(179, 0, 0, 0.815);
+    color: rgba(238, 238, 238, 0.95);
+  }
+
+  .toasti--info {
+    background-color: var(--color-secondary);
   }
 
   :global(.toasti svg) {
-    padding: 2rem 0 2rem 2rem;
+    padding-left: 2rem;
   }
 
   .message {
@@ -73,22 +83,23 @@
   }
 </style>
 
-{#if $appStore.messages[0]}
-  <div
-    class="toasti"
-    transition:fly={{ x: -150, duration: 200 }}
-    on:introend={() => {
-      const timer = document.querySelector('.timer');
-      const timerBoundingClient = timer.getBoundingClientRect();
-      timerWidth = timerBoundingClient.width;
-      document.documentElement.style.setProperty('--timerWidth', `-${timerWidth}px`);
-      timer.classList.add('timer__shrinking');
-    }}>
+<div
+  class={`toasti toasti--${message.type}`}
+  transition:fly={{ x: -150, duration: 200 }}
+  on:introend={() => {
+    const timer = document.querySelector('.timer');
+    const timerBoundingClient = timer.getBoundingClientRect();
+    timerWidth = timerBoundingClient.width;
+    document.documentElement.style.setProperty('--timerWidth', `-${timerWidth}px`);
+    timer.classList.add('timer__shrinking');
+  }}>
 
+  {#if message.type === 'error'}
     <ErrorIcon width="30px" height="30px" fill="#fff" />
-    <p class="message">{message.message}</p>
-    <div
-      class="timer"
-      style="animation-duration: {message.timeout * 1000}ms;" />
-  </div>
-{/if}
+  {:else if message.type === 'info'}
+    <InfoIcon width="30px" height="30px" fill="#fff" />
+  {/if}
+
+  <p class="message">{message.message}</p>
+  <div class="timer" style="animation-duration: {message.timeout * 1000}ms;" />
+</div>

@@ -1,6 +1,6 @@
 export const removeMessage = (messages, location) => {
   const errorIndex = messages.findIndex(
-    message => message.location === location
+    (message) => message.location === location
   );
   if (errorIndex !== -1) {
     messages.splice(errorIndex, 1);
@@ -10,17 +10,26 @@ export const removeMessage = (messages, location) => {
   }
 };
 
-export const addMessage = (messages, type, location, message) => {
+export const addMessage = (
+  messages,
+  type,
+  location,
+  message,
+  timeout = 6,
+  toast = true
+) => {
   // If the message doesn't exist already
-  if (messages.findIndex(m => m.message === message) === -1) {
+  if (messages.findIndex((m) => m.message === message) === -1) {
     // Add the new error message to the array
     return [
       ...messages,
       {
         type,
         location,
-        message
-      }
+        message,
+        timeout,
+        toast,
+      },
     ];
   } else {
     return messages;

@@ -1,3 +1,6 @@
+// Friendlist need to be public for select page!
+// Spieldetails need to be public for games page!
+
 Get all my games:
 http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=2F15898C280E0CD2F2D007CEB140476E&steamid=76561198029394113&format=json
 
@@ -9,3 +12,21 @@ http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=2F15898C280
 
 Game Info:
 https://store.steampowered.com/api/appdetails?appids=730
+
+Bazillus
+"76561197967464248"
+
+Blackcat
+"76561198012052018"
+
+"Deguran"
+"76561198050794740"
+
+"GuWant"
+"76561198235306784"
+
+"ZipfelKuh_save"
+76561198254442485
+
+Privacy Settings:
+https://steamcommunity.com/my/edit/settings
