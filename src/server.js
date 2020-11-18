@@ -71,7 +71,7 @@ function ensureAuthenticated(req, res, next) {
   res.redirect("/");
 }
 
-express() // You can also use Express
+export default express() // You can also use Express
   .use(
     session({
       secret: "your secret",
