@@ -4,8 +4,8 @@
 
   import { removeMessage, addMessage } from "../utils/messageHandler.js";
   import { appStore } from "../stores";
-  import ErrorIcon from "./Icons/ExclamationMark.svelte";
-  import InfoIcon from "./Icons/Info.svelte";
+  import ErrorIcon from "./icons/ExclamationMark.svelte";
+  import InfoIcon from "./icons/Info.svelte";
 
   export let message;
   let timerWidth;

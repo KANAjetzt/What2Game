@@ -71,7 +71,8 @@ function ensureAuthenticated(req, res, next) {
   res.redirect("/");
 }
 
-express() // You can also use Express
+const app = express() // You can also use Express
+  app
   .use(
     session({
       secret: "your secret",
@@ -149,3 +150,5 @@ express() // You can also use Express
   .listen(PORT, (err) => {
     if (err) console.log("error", err);
   });
+
+  export default app
