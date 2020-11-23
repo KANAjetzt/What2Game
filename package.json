@@ -22,6 +22,7 @@
     "passport": "^0.4.1",
     "passport-steam": "^1.0.14",
     "polka": "next",
+    "serverless-http": "^2.6.0",
     "sirv": "^0.4.6"
   },
   "devDependencies": {

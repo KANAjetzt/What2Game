@@ -5,7 +5,6 @@ import compression from "compression";
 import * as sapper from "@sapper/server";
 import cors from "cors";
 import { json } from "body-parser";
-import session from "express-session";
 import passport from "passport";
 import SteamStrategy from "passport-steam";
 
@@ -64,23 +63,8 @@ passport.use(
   )
 );
 
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect("/");
-}
-
 const app = express() // You can also use Express
   app
-  .use(
-    session({
-      secret: "your secret",
-      name: "name of session id",
-      resave: true,
-      saveUninitialized: true,
-    })
-  )
   .use(passport.initialize())
   .use(passport.session())
   .get("/auth/login", passport.authenticate("steam", { failureRedirect: "/" }))
