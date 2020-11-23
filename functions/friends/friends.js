@@ -1,11 +1,8 @@
 const axios = require('axios')
 
 const handler = async (event, context) => {
-    /* Initializes */
-    res.setHeader("Content-Type", "application/json");
-  
     /* Retrieves the data */
-    const steamId = req.body.steamId;
+    const steamId = JSON.parse(event.body).steamId;
   
     // Do something with the data...
     const gameReq = await axios(
@@ -22,9 +19,10 @@ const handler = async (event, context) => {
     const friendDataa = friendData.data.response.players;
   
     /* Returns the result */
-    return res.end(JSON.stringify({ success: true, data: { friendDataa } }));
-}
-
-
+    return {
+      statusCode: 200,
+     body: JSON.stringify({ success: true, data: { friendDataa } })
+    }
+  }    
 
 exports.handler = handler

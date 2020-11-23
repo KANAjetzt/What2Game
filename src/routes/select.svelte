@@ -27,8 +27,7 @@
     try {
       const data = { steamId };
 
-      // associated script = /src/routes/process/gameInfo.js
-      const url = "/process/friends";
+      const url = "api/friends";
 
       // request general info about friends
       const res = await fetch(url, {
