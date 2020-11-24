@@ -64,8 +64,7 @@
       await asyncForEach(sameGames, async appId => {
         const data = { appId };
 
-        // associated script = /src/routes/process/gameInfo.js
-        const url = "/process/gameInfo";
+        const url = "/api/gameInfo";
 
         // request steam store game info of this game
         const res = await fetch(url, {
@@ -98,10 +97,9 @@
   };
 
   const getGamesOfUser = async steamId => {
-    const data = { friendSteamId: steamId };
+    const data = { steamId };
 
-    // associated script = /src/routes/process/games.js
-    const url = "/process/games";
+    const url = "/api/game";
 
     // request all games
     const res = await fetch(url, {
@@ -117,11 +115,10 @@
 
   const getGamesOfFriends = async () => {
     await asyncForEach($appStore.selectedFriends, async (friend, index) => {
-      const friendSteamId = friend.steamid;
-      const data = { friendSteamId };
+      const steamId = friend.steamid;
+      const data = { steamId };
 
-      // associated script = /src/routes/process/games.js
-      const url = "/process/games";
+      const url = "/api/game";
 
       // request all games of this friend
       const res = await fetch(url, {
