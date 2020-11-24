@@ -28,10 +28,6 @@
     }
   };
 
-  const handleSteamAuth = () => {
-    console.log("do stuff");
-  };
-
   const getSteamIdFromQueryString = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const steamId = urlParams.get("steamID");
@@ -121,7 +117,7 @@
         <TextInput />
 
         <div class="steamBtn">
-          <a href="/auth/login" on:click={handleSteamAuth}>
+          <a href="api/auth">
             <img src="/sits_02.png" alt="steam login btn" />
           </a>
         </div>
