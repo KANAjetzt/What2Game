@@ -30,20 +30,25 @@ passport.use(
 
 const app = express(); // You can also use Express
 app
-  .use(console.log("--- using auth function ---"))
+  .use((req, res, next) => {
+    console.log("--- using auth function ---");
+    next();
+  })
   .use(passport.initialize())
   .use(passport.session())
   .get(
     "/api/auth",
-    () => {
+    (req, res, next) => {
       console.log("authing");
+      next();
     },
     passport.authenticate("steam", { failureRedirect: "/" })
   )
   .get(
     "/api/auth/steam/return",
-    () => {
+    (req, res, next) => {
       console.log("returning");
+      next();
     },
     passport.authenticate("steam", { failureRedirect: "/" }),
     (req, res) => {
