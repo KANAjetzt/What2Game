@@ -11,6 +11,8 @@
   import Button from "../components/Button.svelte";
   import TextInput from "../components/TextInput.svelte";
 
+  let authApiLink = undefined;
+
   // set current page
   $appStore.currentPage = "index";
 
@@ -40,6 +42,8 @@
   };
 
   if (process.browser) {
+    authApiLink = `${window.location.origin}/api/auth`;
+
     let steamId = $appStore.user.steamId;
 
     // Check for steamId in queryString
@@ -117,7 +121,7 @@
         <TextInput />
 
         <div class="steamBtn">
-          <a rel="external" href={`${window.location.origin}/api/auth`}>
+          <a rel="external" href={authApiLink}>
             <img src="/sits_02.png" alt="steam login btn" />
           </a>
         </div>
