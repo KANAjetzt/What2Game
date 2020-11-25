@@ -77,6 +77,11 @@
 
         const gameInfo = (await res.json()).data.gameInfo[appId].data;
 
+        // if we can't get game info - skip
+        if (!gameInfo) {
+          return;
+        }
+
         // check if game has important game categories
         if (
           gameInfo.categories.filter(categorie =>
@@ -89,10 +94,10 @@
         }
 
         // save game Info in appStore
-        if (gameInfo) $appStore.sameGames = [...$appStore.sameGames, gameInfo];
+        $appStore.sameGames = [...$appStore.sameGames, gameInfo];
       });
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
