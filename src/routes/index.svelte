@@ -117,7 +117,7 @@
         <TextInput />
 
         <div class="steamBtn">
-          <a href="api/auth">
+          <a href="/api/auth">
             <img src="/sits_02.png" alt="steam login btn" />
           </a>
         </div>
