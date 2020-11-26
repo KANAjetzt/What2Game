@@ -272,7 +272,10 @@
         );
 
         $appStore.friends = getFriendsInfo($appStore.user.steamId).then(
-          data => ($appStore.friends = data)
+          data => {
+            $appStore.friends = data;
+            saveLocalStorage($appStore, "appStore");
+          }
         );
       }
     }
