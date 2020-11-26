@@ -17,15 +17,30 @@
   $appStore.currentPage = "index";
 
   const handleLocalStorage = () => {
+    const ls = getLocalStorage("appStore");
     // Steam id in $appStore and LS are the same --> skip
-    if (
-      getLocalStorage("appStore") &&
-      getLocalStorage("appStore").user.steamId === $appStore.user.steamId
-    ) {
+    if (ls && ls.user.steamId === $appStore.user.steamId) {
       return;
       // else clear LS and save
     } else {
+      // delete LS
       deleteLocalStorage("appStore");
+      // restore appStore to default, but save the new steamId!
+      $appStore = {
+        user: { steamId: $appStore.user.steamId },
+        friends: [],
+        selectedFriends: [],
+        selectedFriendsArchive: [],
+        selectedFriendsHaveChanged: false,
+        sameGames: [],
+        messages: [],
+        currentPage: [],
+        importantGameCategorieIds: [1, 9, 38],
+        clickedGameIndex: undefined,
+        modalIsOpen: false,
+        showSinglePlayerGames: true
+      };
+      // save new appStore to LS
       saveLocalStorage($appStore, "appStore");
     }
   };

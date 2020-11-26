@@ -30,3 +30,6 @@ Blackcat
 
 Privacy Settings:
 https://steamcommunity.com/my/edit/settings
+
+API Key:
+https://steamcommunity.com/dev/apikey
