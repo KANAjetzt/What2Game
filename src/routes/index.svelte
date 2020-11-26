@@ -63,6 +63,9 @@
 </script>
 
 <style>
+  .links {
+    display: none;
+  }
   .background {
     background-image: url("/Stars-medium.jpg");
     background-size: cover;
@@ -108,6 +111,12 @@
 </style>
 
 <PageTransition>
+
+  <!-- Hidden links for sapper export - without routing breaks -->
+  <div class="links">
+    <a href="/select">''</a>
+    <a href="/games">''</a>
+  </div>
 
   <div class="background">
     <div class="grid">
