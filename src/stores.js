@@ -3,8 +3,8 @@ import { writable, derived } from "svelte/store";
 export const appStore = writable({
   user: {},
   friends: [],
-  // removed that - So I don't have to maintain 2 redundant friend objects
   selectedFriends: [],
+  selectedFriendsArchive: [],
   selectedFriendsHaveChanged: false,
   sameGames: [],
   messages: [],
@@ -31,10 +31,12 @@ export const selectedFriends = derived(appStore, ($appStore) => {
   // 1) get Friend from App Store
   let { friends } = $appStore;
 
-  return $appStore.selectedFriends = friends.filter(friend => friend.selected)
+  return ($appStore.selectedFriends = friends.filter(
+    (friend) => friend.selected
+  ));
 });
 
-export const noSinglePlayerGames = derived(appStore, $appStore => {
-  let {sameGames} = $appStore
-  return sameGames.filter(game => game.importantCategorie)
-})
+export const noSinglePlayerGames = derived(appStore, ($appStore) => {
+  let { sameGames } = $appStore;
+  return sameGames.filter((game) => game.importantCategorie);
+});

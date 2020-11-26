@@ -189,9 +189,6 @@
 
       // Save the new data to LS
       saveLocalStorage($appStore, "appStore");
-
-      // Make shure we know that the selection has changed so we search for new games later
-      $appStore.selectedFriendsHaveChanged = true;
     }
   };
 
@@ -203,7 +200,30 @@
     if (!$appStore.user.games) {
       $appStore.user.games = await getGamesOfUser($appStore.user.steamId);
     }
-    // if selection of friends changed or no games we have no games jet --> get the games
+
+    // Check if selection has changed
+    // if selectedFriends is difrent then selectedFriendsArchive
+    const selectedFriendsSteamIds = $appStore.selectedFriends.map(
+      selectedFriend => selectedFriend.steamid
+    );
+    const selectedFriendsArchiveSteamIds = $appStore.selectedFriendsArchive.map(
+      selectedFriendArchive => selectedFriendArchive.steamid
+    );
+
+    // Filter out all SteamIds that are in the archived friend selection
+    const check = selectedFriendsSteamIds.filter(steamid =>
+      selectedFriendsArchiveSteamIds.includes(steamid)
+    );
+
+    // check if the length of the filtered array is the same as the current and archived friend selection
+    // based on that we can search for same games again or not
+    $appStore.selectedFriendsHaveChanged =
+      check.length === selectedFriendsSteamIds.length &&
+      check.length === selectedFriendsArchiveSteamIds.length
+        ? false
+        : true;
+
+    // if selection of friends changed or we have no games jet --> get the games
     if (!$appStore.sameGames[0] || $appStore.selectedFriendsHaveChanged) {
       // make room for the new games
       $appStore.sameGames = [];
@@ -220,6 +240,12 @@
 
       // get's gameInfo and saves same games in appStore
       await getGameInfo(sameGames);
+
+      // reset selectedFriendsHaveChanged so we dont search all the games all the time
+      $appStore.selectedFriendsHaveChanged = false;
+
+      // save current selection of friends so we can compare them if hit "what2game" again
+      $appStore.selectedFriendsArchive = $appStore.selectedFriends;
 
       saveLocalStorage($appStore, "appStore");
     }
