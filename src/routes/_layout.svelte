@@ -2,7 +2,8 @@
   import { appStore } from "../stores.js";
   import {
     getLocalStorage,
-    saveLocalStorage
+    saveLocalStorage,
+    deleteLocalStorage
   } from "../utils/localStorageHandler";
   import NeonText from "../components/NeonText.svelte";
   import Nav from "../components/Nav.svelte";
@@ -10,7 +11,18 @@
 
   if (process.browser) {
     const ls = getLocalStorage("appStore");
-    ls ? ($appStore = ls) : null;
+
+    // if we are in dev mode just restore ls - we can handle version errors 😅
+    if ($appStore.version === "dev") {
+      ls ? ($appStore = ls) : null;
+    } else {
+      if (ls) {
+        // check version
+        ls.version === $appStore.version
+          ? ($appStore = ls)
+          : deleteLocalStorage("appStore");
+      }
+    }
   }
 
   export let segment;
