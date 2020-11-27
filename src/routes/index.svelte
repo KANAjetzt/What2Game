@@ -26,11 +26,13 @@
       // delete LS
       deleteLocalStorage("appStore");
       // restore appStore to default, but save the new steamId!
+      // definitely have to find a better solution for this 😅🤐
       $appStore = {
         user: { steamId: $appStore.user.steamId },
         friends: [],
         selectedFriends: [],
         selectedFriendsArchive: [],
+        selectedFriendLoading: { isLoading: false, index: undefined },
         selectedFriendsHaveChanged: false,
         sameGames: [],
         messages: [],

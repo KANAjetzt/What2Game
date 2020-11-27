@@ -5,6 +5,7 @@ export const appStore = writable({
   friends: [],
   selectedFriends: [],
   selectedFriendsArchive: [],
+  selectedFriendLoading: { isLoading: false, index: undefined },
   selectedFriendsHaveChanged: false,
   sameGames: [],
   messages: [],

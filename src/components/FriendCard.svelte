@@ -1,8 +1,11 @@
 <script>
   import { fly } from "svelte/transition";
+  import { appStore } from "../stores";
   import FriendImg from "./FriendImg.svelte";
+  import Loader from "./Loader.svelte";
 
   export let friend;
+  export let index;
 
   const handleLastLogOff = friend => {
     // check if currently online
@@ -126,16 +129,20 @@
       src={friend.avatarfull}
       alt={`Avatar image of ${friend.personaname}`} />
   </div>
-  <div class="info">
-    <p class="name">{friend.personaname}</p>
-    <p class="lastLogOff">{handleLastLogOff(friend)}</p>
-  </div>
-  {#if friend.error}
-    <div class="errorMessage">
-      <p>Make sure "Profile" and "Game details" are both set to "Public".</p>
-      <a href="https://steamcommunity.com/my/edit/settings">
-        Steam Privacy Settings
-      </a>
+  {#if $appStore.selectedFriendLoading.isLoading && index === $appStore.selectedFriendLoading.index}
+    <Loader />
+  {:else}
+    <div class="info">
+      <p class="name">{friend.personaname}</p>
+      <p class="lastLogOff">{handleLastLogOff(friend)}</p>
     </div>
+    {#if friend.error}
+      <div class="errorMessage">
+        <p>Make sure "Profile" and "Game details" are both set to "Public".</p>
+        <a href="https://steamcommunity.com/my/edit/settings">
+          Steam Privacy Settings
+        </a>
+      </div>
+    {/if}
   {/if}
 </div>
