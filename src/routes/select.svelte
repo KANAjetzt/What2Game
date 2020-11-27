@@ -162,7 +162,9 @@
     }
 
     // 2) Find all Games of this friend
+    $appStore.selectedFriendLoading = { isLoading: true, index: appStoreIndex };
     const friendGames = await getGamesOfUser(friend.steamid);
+    $appStore.selectedFriendLoading = { isLoading: false, index: undefined };
 
     // 3) Check if we can get friends games
     if (!friendGames) {
@@ -272,7 +274,10 @@
         );
 
         $appStore.friends = getFriendsInfo($appStore.user.steamId).then(
-          data => ($appStore.friends = data)
+          data => {
+            $appStore.friends = data;
+            saveLocalStorage($appStore, "appStore");
+          }
         );
       }
     }
@@ -349,7 +354,7 @@
             type="checkbox"
             on:change={handleSelectedFriend(friend)} />
           <label class="labelFriend" for={`friend-${index}`}>
-            <FriendCard {friend} />
+            <FriendCard {friend} {index} />
           </label>
         {/each}
 
