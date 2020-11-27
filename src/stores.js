@@ -14,6 +14,7 @@ export const appStore = writable({
   clickedGameIndex: undefined,
   modalIsOpen: false,
   showSinglePlayerGames: true,
+  version: 'commitRef',
 });
 
 // Sort Friends ABC
