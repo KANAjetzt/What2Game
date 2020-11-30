@@ -32,10 +32,16 @@
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
     max-width: 80rem;
-    padding: 5rem;
+    padding: 3rem;
     overflow-y: auto;
     background-size: cover;
     z-index: 1001;
+  }
+
+  @media only screen and (min-width: 480px) {
+    .modal {
+      padding: 5rem;
+    }
   }
 
   .content {
@@ -46,7 +52,6 @@
   .btnRemove {
     grid-row: 1 / 2;
     grid-column: 1 / 2;
-    align-self: end;
     justify-self: end;
     margin: -2rem;
   }
