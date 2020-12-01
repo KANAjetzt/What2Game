@@ -84,7 +84,7 @@
     display: none;
   }
   .background {
-    background-image: url("https://res.cloudinary.com/kana/image/upload/e_improve,g_auto,w_auto/v1606824276/Stars_m9qgpi.jpg");
+    background-image: url("https://res.cloudinary.com/kana/image/upload/f_auto,q_auto,g_auto/v1606824276/Stars_m9qgpi.jpg");
     background-size: cover;
   }
 
@@ -126,6 +126,10 @@
     margin-top: 2rem;
   }
 </style>
+
+<svelte:head>
+  <title>What2Game - Enter Steam ID</title>
+</svelte:head>
 
 <PageTransition>
 

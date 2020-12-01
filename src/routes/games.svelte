@@ -49,6 +49,10 @@
   }
 </style>
 
+<svelte:head>
+  <title>What2Game - Games</title>
+</svelte:head>
+
 <PageTransition>
   <div class="filterBtn">
     <SettingsBtn />
