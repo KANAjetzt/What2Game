@@ -1,5 +1,4 @@
 <script>
-  import { onMount } from "svelte";
   import { appStore } from "../stores.js";
   import {
     getLocalStorage,
@@ -7,10 +6,6 @@
     deleteLocalStorage
   } from "../utils/localStorageHandler";
   import TostMessage from "../components/ToastMessage.svelte";
-
-  let ready = false;
-
-  onMount(() => (ready = true));
 
   if (process.browser) {
     const ls = getLocalStorage("appStore");
@@ -44,9 +39,6 @@
   {/each}
 {/if}
 
-{#if ready}
-  <!-- <Nav {segment} /> -->
-  <main>
-    <slot />
-  </main>
-{/if}
+<main>
+  <slot />
+</main>
