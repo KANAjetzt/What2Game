@@ -1,13 +1,16 @@
 <script>
+  import { onMount } from "svelte";
   import { appStore } from "../stores.js";
   import {
     getLocalStorage,
     saveLocalStorage,
     deleteLocalStorage
   } from "../utils/localStorageHandler";
-  import NeonText from "../components/NeonText.svelte";
-  import Nav from "../components/Nav.svelte";
   import TostMessage from "../components/ToastMessage.svelte";
+
+  let ready = false;
+
+  onMount(() => (ready = true));
 
   if (process.browser) {
     const ls = getLocalStorage("appStore");
@@ -41,7 +44,9 @@
   {/each}
 {/if}
 
-<!-- <Nav {segment} /> -->
-<main>
-  <slot />
-</main>
+{#if ready}
+  <!-- <Nav {segment} /> -->
+  <main>
+    <slot />
+  </main>
+{/if}
