@@ -84,7 +84,7 @@
     display: none;
   }
   .background {
-    background-image: url("/Stars-medium.jpg");
+    background-image: url("https://res.cloudinary.com/kana/image/upload/e_improve,g_auto,w_auto/v1606824276/Stars_m9qgpi.jpg");
     background-size: cover;
   }
 
