@@ -1,6 +1,4 @@
 <script>
-  // TODO: - on click show loader until games are fetched
-
   import { fly } from "svelte/transition";
 
   import { appStore, sortedFriends, selectedFriends } from "../stores";
@@ -325,7 +323,7 @@
 </style>
 
 <svelte:head>
-  <title>Friend Selection</title>
+  <title>What2Game - Friend Selection</title>
 </svelte:head>
 
 <PageTranstion>
