@@ -61,5 +61,5 @@
     autocomplete="off"
     required
     bind:value={$appStore.user.steamId} />
-  <label>Steam ID</label>
+  <label for="steamId">Steam ID</label>
 </div>

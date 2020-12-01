@@ -18,6 +18,7 @@ const preprocess = dev
     });
 
 const onwarn = (warning, onwarn) =>
+  (warning.code === "MISSING_EXPORT" && /'preload'/.test(warning.message)) ||
   (warning.code === "CIRCULAR_DEPENDENCY" &&
     /[/\\]@sapper[/\\]/.test(warning.message)) ||
   onwarn(warning);
@@ -74,6 +75,7 @@ export default {
         }),
     ],
 
+    preserveEntrySignatures: false,
     onwarn,
   },
 
@@ -99,6 +101,7 @@ export default {
         Object.keys(process.binding("natives"))
     ),
 
+    preserveEntrySignatures: "strict",
     onwarn,
   },
 
@@ -115,6 +118,7 @@ export default {
       !dev && terser(),
     ],
 
+    preserveEntrySignatures: false,
     onwarn,
   },
 };

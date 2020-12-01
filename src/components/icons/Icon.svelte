@@ -26,7 +26,7 @@
 {#if bg}
   <div
     class="bg"
-    style="width: {width < 25 ? width + 10 : width + 20}px; height: {width < 25 ? width + 10 : width + 20}px;
+    style="width: {width < 25 ? width + 10 : width + 20}px; height: {height < 25 ? height + 10 : height + 20}px;
     {border ? 'border: solid 4px var(--color-primary);' : null}">
     <slot />
   </div>
